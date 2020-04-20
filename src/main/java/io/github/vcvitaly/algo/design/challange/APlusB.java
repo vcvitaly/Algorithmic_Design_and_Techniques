@@ -1,4 +1,4 @@
-package io.github.vcvitaly.algo.design.week1;
+package io.github.vcvitaly.algo.design.challange;
 
 import java.util.Scanner;
 
