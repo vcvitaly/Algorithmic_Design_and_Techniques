@@ -18,6 +18,8 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompile 'org.rnorth.duct-tape:duct-tape:1.0.8'
 }
 
 test {
