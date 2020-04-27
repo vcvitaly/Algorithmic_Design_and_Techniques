@@ -2,34 +2,23 @@ package io.github.vcvitaly.algo.design.warmup;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FibonacciHuge {
 
     private static final List<Long> PIZANO_START_SEQ = Arrays.asList(0L, 1L);
 
-    private final List<BigInteger> numbers = new LinkedList<>(
-            PIZANO_START_SEQ.stream().map(BigInteger::valueOf).collect(Collectors.toList())
-    );
+    private final Map<Long, BigInteger> numbers = new HashMap<>();
 
-    long getFibonacciHugeNaive(long n, long m) {
-        if (n <= 1)
-            return n;
-
-        long previous = 0;
-        long current  = 1;
-
-        for (long i = 0; i < n - 1; ++i) {
-            long tmp_previous = previous;
-            previous = current;
-            current = tmp_previous + current;
+    {
+        for (Long l : PIZANO_START_SEQ) {
+            numbers.put(l, BigInteger.valueOf(l));
         }
-
-        return current % m;
     }
 
     long getFibonacciHugeFast(long n, long m) {
@@ -49,10 +38,6 @@ public class FibonacciHuge {
 
         for (int i = PIZANO_START_SEQ.size(); !isAPeriod(remainders); i++) {
             BigInteger fib = calcFib(i);
-            if (fib.compareTo(BigInteger.ZERO) < 0) {
-                throw new IllegalStateException(String.format("fib(%d)=%d and is negative", i, fib));
-            }
-
             remainders.add(fib.mod(mBigInt).longValue());
         }
 
@@ -104,7 +89,7 @@ public class FibonacciHuge {
                 .noneMatch(n -> (number % n == 0));
     }
 
-    private BigInteger calcFib(int n) {
+    private BigInteger calcFib(long n) {
         if (n <= 1) {
             return BigInteger.valueOf(n);
         }
@@ -113,11 +98,17 @@ public class FibonacciHuge {
             return numbers.get(n);
         }
 
-        for (int i = numbers.size(); i <= n; i++) {
-            numbers.add(numbers.get(i-1).add(numbers.get(i-2)));
+        for (long i = numbers.size(); i <= n; i++) {
+            numbers.put(i, numbers.get(i-1).add(numbers.get(i-2)));
         }
 
-        return numbers.get(n);
+        BigInteger fib = numbers.get(n);
+
+        if (fib.compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalStateException(String.format("fib(%d)=%d and is negative", n, fib));
+        }
+
+        return fib;
     }
 
     public static void main(String[] args) {
