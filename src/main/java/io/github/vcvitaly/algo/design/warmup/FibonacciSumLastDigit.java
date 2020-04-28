@@ -30,8 +30,11 @@ public class FibonacciSumLastDigit {
             return n;
         }
 
-        long nPlus2LastDigit = getLastDigitOfFibN(n + 2);
-        return nPlus2LastDigit == 0 ? 9 : nPlus2LastDigit - 1;
+        return getLastDigitOfFibSumUpto(n);
+    }
+
+    private static long getLastDigitOfFibSumUpto(long n) {
+        return ((getLastDigitOfFibN(n + 2) - 1) + 10) % 10;
     }
 
     static long getLastDigitOfFibN(long n) {
