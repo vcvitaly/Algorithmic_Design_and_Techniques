@@ -1,4 +1,4 @@
-package io.github.vcvitaly.algo.design.challange;
+package io.github.vcvitaly.algo.design._01_challange;
 
 import java.io.BufferedReader;
 import java.io.IOException;

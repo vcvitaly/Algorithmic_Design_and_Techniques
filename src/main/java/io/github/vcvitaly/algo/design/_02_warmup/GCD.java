@@ -1,4 +1,4 @@
-package io.github.vcvitaly.algo.design.warmup;
+package io.github.vcvitaly.algo.design._02_warmup;
 
 import java.util.Scanner;
 

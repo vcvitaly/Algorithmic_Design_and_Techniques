@@ -1,7 +1,6 @@
-package io.github.vcvitaly.algo.design.warmup;
+package io.github.vcvitaly.algo.design._02_warmup;
 
 import io.github.vcvitaly.algo.Helper;
-import io.github.vcvitaly.algo.design.warmup.FibonacciLastDigit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.stream.Stream;
