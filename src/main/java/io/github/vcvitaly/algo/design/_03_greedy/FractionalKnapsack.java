@@ -28,11 +28,11 @@ public class FractionalKnapsack {
     }
 
     private static int bestItem(int[] values, int[] weights) {
-        int maxValuePerWeight = 0;
+        double maxValuePerWeight = 0;
         int bestItem = 0;
         for (int i = 0; i < values.length; i++) {
             if (weights[i] > 0) {
-                int ithValuePerWeight = values[i] / weights[i];
+                double ithValuePerWeight = (double) values[i] / weights[i];
                 if (ithValuePerWeight > maxValuePerWeight) {
                     maxValuePerWeight = ithValuePerWeight;
                     bestItem = i;

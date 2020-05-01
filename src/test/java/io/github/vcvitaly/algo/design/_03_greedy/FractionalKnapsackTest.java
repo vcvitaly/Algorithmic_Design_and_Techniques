@@ -23,6 +23,7 @@ class FractionalKnapsackTest {
                 new Param(3, 50, new int[] {60, 100, 120}, new int[] {20, 50, 30}, 180.0000),
                 new Param(1, 10, new int[] {500}, new int[] {30}, 166.6667),
                 new Param(1, 10, new int[] {100}, new int[] {10}, 100)
+                // TODO test case for small fractions
         );
     }
 
