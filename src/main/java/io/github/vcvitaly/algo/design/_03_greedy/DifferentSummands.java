@@ -22,7 +22,7 @@ public class DifferentSummands {
 
         while (n > 0) {
             int a = summands.get(summands.size() - 1) + 1;
-            while (summands.contains(n - a)) {
+            while (summands.contains(n - a) || n - a == a) {
                 a++;
             }
             summands.add(a);

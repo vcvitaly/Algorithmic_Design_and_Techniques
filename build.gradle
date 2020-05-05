@@ -13,13 +13,12 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.15.0'
     testCompile 'org.junit.jupiter:junit-jupiter:5.6.2'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testCompile 'org.rnorth.duct-tape:duct-tape:1.0.8'
+
+    testCompile("com.google.guava:guava:29.0-jre")
 }
 
 test {
