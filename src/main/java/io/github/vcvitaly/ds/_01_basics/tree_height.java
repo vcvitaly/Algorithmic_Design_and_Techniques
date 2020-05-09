@@ -3,6 +3,7 @@ package io.github.vcvitaly.ds._01_basics;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class tree_height {
@@ -25,6 +26,7 @@ public class tree_height {
     }
 
     public static class TreeHeight {
+        private static final int ROOT_HEIGHT = 1;
         int n;
         int parent[];
 
@@ -57,11 +59,32 @@ public class tree_height {
         }
 
         int computeHeightFast() {
-            return 0;
+            int[] heights = new int[n];
+            Arrays.fill(heights, -1);
+
+            int maxHeight = 0;
+
+            for (int vertex = 0; vertex < n; vertex++) {
+                int height = 0;
+
+                if (parent[vertex] == -1) {
+                    height = heights[vertex] = ROOT_HEIGHT;
+                }
+                else if (heights[parent[vertex]] >= ROOT_HEIGHT) {
+                    height = heights[vertex] = heights[parent[vertex]] + 1;
+                } else {
+                    int i;
+                    for (i = vertex; i != -1 && heights[i] >= 0; i = parent[i]) height++;
+                    height  = heights[vertex] = heights[i] + 1;
+                }
+
+                maxHeight = Math.max(maxHeight, height);
+            }
+            return maxHeight;
         }
     }
 
-    static public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         new Thread(null, () -> {
             try {
                 new tree_height().run();
