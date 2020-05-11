@@ -1,10 +1,11 @@
 package io.github.vcvitaly.algo.design._03_greedy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class DifferentSummands {
 
@@ -17,19 +18,20 @@ public class DifferentSummands {
             return Collections.singletonList(n);
         }
 
-        List<Integer> summands = new ArrayList<>(Arrays.asList(1));
+        Set<Integer> summands = new HashSet<>(Collections.singletonList(1));
         n--;
+        int a = 1;
 
         while (n > 0) {
-            int a = summands.get(summands.size() - 1) + 1;
-            while (summands.contains(n - a) || n - a == a) {
-                a++;
+            a++;
+            if (summands.contains(n - a) || n - a == a) {
+                a = n;
             }
             summands.add(a);
             n -= a;
         }
 
-        return summands;
+        return new ArrayList<>(summands);
     }
 
     public static void main(String[] args) {
