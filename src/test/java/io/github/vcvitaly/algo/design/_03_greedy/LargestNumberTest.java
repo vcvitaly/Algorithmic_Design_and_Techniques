@@ -34,8 +34,6 @@ class LargestNumberTest {
         return Stream.of(
                 new Param(new int[] {22}, 22),
                 new Param(new int[] {9, 4, 6, 1, 9}, 99641),
-//                new Param(new int[] {21, 2}, 221),
-                new Param(new int[] {23, 39, 92}, 923923),
                 new Param(new int[] {2, 247, 294}, 2942472)
         );
     }
