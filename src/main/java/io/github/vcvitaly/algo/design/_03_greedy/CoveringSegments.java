@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CoveringSegments {
 
@@ -14,17 +13,15 @@ public class CoveringSegments {
         List<Segment> segmentList = new LinkedList<>(Arrays.asList(segments));
         List<Integer> points = new LinkedList<>();
 
-        segmentList.sort(Comparator.comparingInt(s -> s.start));
+        segmentList.sort(Comparator.comparingInt(s -> s.end));
 
         while (!segmentList.isEmpty()) {
             Segment segment = segmentList.remove(0);
             List<Segment> intersectingSegments = segmentList.stream()
-                    .filter(segmentFromList -> segmentFromList.start <= segment.end)
+                    .filter(s -> s.start <= segment.end)
                     .collect(Collectors.toList());
 
-            points.add(
-                    Stream.concat(Stream.of(segment), intersectingSegments.stream()).mapToInt(s -> s.end).sorted().findFirst().getAsInt()
-            );
+            points.add(segment.end);
 
             segmentList.removeAll(intersectingSegments);
         }
