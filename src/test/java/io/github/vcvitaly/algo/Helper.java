@@ -24,4 +24,11 @@ public class Helper {
         System.setOut(out);
         return baos;
     }
+
+    public static String shortToString(Object o) {
+        String s = o.toString();
+        return s.substring(
+                0, Math.min(s.length(), 100)
+        );
+    }
 }
