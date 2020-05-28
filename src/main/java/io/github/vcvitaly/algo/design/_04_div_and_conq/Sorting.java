@@ -32,8 +32,7 @@ public class Sorting {
         }
 
         int m2 = j;
-        int[] m = {m1, m2};
-        return m;
+        return new int[]{m1, m2};
     }
 
     static int partition2(int[] a, int l, int r) {
@@ -65,15 +64,14 @@ public class Sorting {
         a[l] = a[k];
         a[k] = t;
 
-        //use partition3
         while (l < r) {
-            int m = partition2(a, l, r);
-            if (m - l < r - m) {
-                randomizedQuickSort(a, l, m - 1);
-                l = m + 1;
+            int[] m = partition3(a, l, r);
+            if (m[0] - 1 - l < r - m[1] + 1) {
+                randomizedQuickSort(a, l, m[0] - 1);
+                l = m[1] + 1;
             } else {
-                randomizedQuickSort(a, m + 1, r);
-                r = m - 1;
+                randomizedQuickSort(a, m[1] + 1, r);
+                r = m[0] - 1;
             }
         }
     }
