@@ -15,7 +15,7 @@ class SortingTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void verifiesMajority(Param param) {
+    void verifiesArrayIsSorted(Param param) {
         System.out.println(Helper.shortToString(param));
         // Act
         Sorting.randomizedQuickSort(param.a, 0, param.a.length - 1);
@@ -25,7 +25,7 @@ class SortingTest {
 
     static Stream<Param> params() {
 
-        int[] a = IntStream.range(0, 20_000).map(i -> 123_456_789).toArray();
+        int[] a = IntStream.range(0, 10_000).map(i -> 123_456_789).toArray();
         return Stream.of(
                 Param.of(new int[] {7}, new int[] {7}),
                 Param.of(new int[] {2, 3, 9, 2, 2}, new int[] {2, 2, 2, 3, 9}),

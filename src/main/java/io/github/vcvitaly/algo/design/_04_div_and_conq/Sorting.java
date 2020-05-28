@@ -7,15 +7,31 @@ import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.StringTokenizer;
 
+
+/**
+ * <code>x</code> - pivot number<br>
+ * <code>j</code> - pivot index
+ */
 public class Sorting {
     private static Random random = new Random();
 
     static int[] partition3(int[] a, int l, int r) {
-        //write your code here
+        int x = a[l];
+        int j = l,
+            m1 = l;
 
+        for (int i = l + 1; i <= r; i++) {
+            if (a[i] <= x) {
+                j++;
+                swap(a, i, j);
+                if (a[j] < x) {
+                    swap(a, m1, j);
+                    m1++;
+                }
+            }
+        }
 
-        int m1 = l;
-        int m2 = r;
+        int m2 = j;
         int[] m = {m1, m2};
         return m;
     }
@@ -26,29 +42,40 @@ public class Sorting {
         for (int i = l + 1; i <= r; i++) {
             if (a[i] <= x) {
                 j++;
-                int t = a[i];
-                a[i] = a[j];
-                a[j] = t;
+                swap(a, i, j);
             }
         }
-        int t = a[l];
-        a[l] = a[j];
-        a[j] = t;
+        swap(a, l, j);
         return j;
+    }
+
+    private static void swap(int[] a, int i, int j) {
+        int t = a[i];
+        a[i] = a[j];
+        a[j] = t;
     }
 
     static void randomizedQuickSort(int[] a, int l, int r) {
         if (l >= r) {
             return;
         }
+
         int k = random.nextInt(r - l + 1) + l;
         int t = a[l];
         a[l] = a[k];
         a[k] = t;
+
         //use partition3
-        int m = partition2(a, l, r);
-        randomizedQuickSort(a, l, m - 1);
-        randomizedQuickSort(a, m + 1, r);
+        while (l < r) {
+            int m = partition2(a, l, r);
+            if (m - l < r - m) {
+                randomizedQuickSort(a, l, m - 1);
+                l = m + 1;
+            } else {
+                randomizedQuickSort(a, m + 1, r);
+                r = m - 1;
+            }
+        }
     }
 
     public static void main(String[] args) {
