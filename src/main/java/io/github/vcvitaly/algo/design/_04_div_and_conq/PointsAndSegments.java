@@ -1,5 +1,7 @@
 package io.github.vcvitaly.algo.design._04_div_and_conq;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class PointsAndSegments {
@@ -12,23 +14,47 @@ public class PointsAndSegments {
             Segment segment = new Segment(starts[i], ends[i]);
             segments[i] = segment;
         }
-//        Arrays.sort(segments, Comparator.comparing(Segment::getStart));
+        Arrays.sort(segments, Comparator.comparing(segment -> segment.start));
 
         for (int i = 0; i < points.length; i++) {
-            cnt[i] = search(segments, 0, segments.length - 1, points[i]);
+            cnt[i] = countK(segments, points[i]);
         }
 
         return cnt;
     }
 
-    static int search (Segment[] segments, int left, int right, int point) {
-        if (left == right) {
-            return segments[left].start <= point && point <= segments[left].end ? 1 : 0;
+    static int countK(Segment[] segments, int point) {
+        if (segments.length == 0) {
+            return 0;
         }
 
-        int mid = mid(left, right);
+        int left = 0,
+            right = segments.length - 1;
 
-        return search(segments, left, mid, point) + search(segments, mid + 1, right, point);
+        while (left <= right) {
+            int mid = mid(left, right);
+            if (point <= segments[mid].end) {
+                if (point >= segments[mid].start) {
+                    return naiveCountK(segments, left, right, point);
+                } else {
+                    right = mid-1;
+                }
+            } else {
+                left = mid+1;
+            }
+        }
+
+        return 0;
+    }
+
+    static int naiveCountK(Segment[] segments, int right, int left, int point) {
+        int cnt = 0;
+        for (int i = right; i <= left; i++) {
+            if (segments[i].contains(point)) {
+                cnt++;
+            }
+        }
+        return cnt;
     }
 
     private static int mid(int left, int right) {
@@ -63,7 +89,7 @@ public class PointsAndSegments {
             points[i] = scanner.nextInt();
         }
         //use fastCountSegments
-        int[] cnt = naiveCountSegments(starts, ends, points);
+        int[] cnt = fastCountSegments(starts, ends, points);
         for (int x : cnt) {
             System.out.print(x + " ");
         }
@@ -77,12 +103,8 @@ public class PointsAndSegments {
             this.end = end;
         }
 
-        /*public int getStart() {
-            return start;
+        boolean contains(int point) {
+            return start <= point && point <= end;
         }
-
-        public int getEnd() {
-            return end;
-        }*/
     }
 }

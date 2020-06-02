@@ -13,6 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PointsAndSegmentsTest {
 
+    public static final int UPPER_BOUND = 100_000_000;
+    public static final int LOWER_BOUND = -UPPER_BOUND;
+
     @ParameterizedTest
     @MethodSource("params")
     void verifiesCountOfSegmentsContainingX(Param param) {
@@ -24,34 +27,56 @@ class PointsAndSegmentsTest {
     }
 
     @Test
-    void stressTest() {
+    void performanceTest() {
         int n = 10_000;
         int[] starts = new int[n];
         int[] ends = new int[n];
-        int[] points = new int[n*3];
-        int[] kSegmentsContainingX = new int[n*3];
+        int[] points = new int[n*2+100];
+        int[] kSegmentsContainingX = new int[n*2+100];
 
-        int lowerBound = -100_000_000;
-        int upperBound = 100_000_000;
         int step = 20_000;
-        for (int i = 0, j = lowerBound; i < n && j < upperBound; i++, j += step) {
+        for (int i = 0, j = LOWER_BOUND; i < n && j < UPPER_BOUND; i++, j += step) {
             starts[i] = j;
             ends[i] = j + 10;
             points[i] = j + 3;
-            points[i + n] = j + 5;
             kSegmentsContainingX[i] = 1;
-            kSegmentsContainingX[i + n] = 1;
         }
         
-        for (int i = n*2; i < n*3; i++) {
+        for (int i = n; i < n*2; i++) {
             points[i] = 33;
             kSegmentsContainingX[i] = 0;
         }
 
-        assertThat(
-                PointsAndSegments.fastCountSegments(starts, ends, points)
-        ).containsExactly(kSegmentsContainingX);
+        for (int i = n*2; i < n*2 + 100; i++) {
+            points[i] = LOWER_BOUND + 5;
+            kSegmentsContainingX[i] = 1;
+        }
+
+        for (int i = 0; i < 10; i++) {
+            assertThat(
+                    PointsAndSegments.fastCountSegments(starts, ends, points)
+            ).containsExactly(kSegmentsContainingX);
+        }
     }
+
+    @Test
+    void stressTest() {
+
+
+    }
+
+    /*private Param generateDataForStressTest() {
+        Random r = new Random(123_456_789);
+
+        int[] starts;
+        int[] ends;
+        int[] points;
+        int[] kSegmentsContainingX;
+
+        for (int i = 0; i < 100; i++) {
+            starts[i] = r.nextInt(UPPER_BOUND)
+        }
+    }*/
 
     static Stream<Param> params() {
         return Stream.of(
@@ -68,10 +93,10 @@ class PointsAndSegmentsTest {
                         new int[] {0, 0 ,1}
                 ),
                 Param.of(
-                        new int[] {0, -3, 7},
-                        new int[] {5, 2, 10},
-                        new int[] {1, 6},
-                        new int[] {2, 0}
+                        new int[] {0, -3, 7, 2},
+                        new int[] {5, 2, 10, 4},
+                        new int[] {1, 6, 5},
+                        new int[] {2, 0, 1}
                 )
         );
     }
