@@ -1,10 +1,6 @@
 package io.github.vcvitaly.algo;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -28,7 +24,7 @@ public class Helper {
     public static String shortToString(Object o) {
         String s = o.toString();
         return s.substring(
-                0, Math.min(s.length(), 100)
+                0, Math.min(s.length(), 250)
         );
     }
 }
