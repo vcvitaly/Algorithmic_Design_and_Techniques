@@ -28,7 +28,7 @@ class InversionsTest {
         int end = 10_000;
         return Stream.of(
                 Param.of(new int[] {7}, 0),
-                Param.of(new int[] {2, 3, 9, 2, 2}, 2),
+                Param.of(new int[] {2, 3, 9, 2, 9}, 2),
                 Param.of(new int[] {3, 2, 1}, 3),
                 Param.of(
                         IntStream.rangeClosed(1, end).map(i -> end + 1 - i).toArray(), end * (end - 1) / 2

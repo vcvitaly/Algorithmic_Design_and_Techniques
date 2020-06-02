@@ -9,8 +9,8 @@ public class Inversions {
     }
 
     private static Tuple<int[], Long> mergeSortWithInversion(int[] a, int left, int right) {
-        if (a.length == 1) {
-            return new Tuple<>(a, 0L);
+        if (left == right) {
+            return new Tuple<>(new int[] {a[left]}, 0L);
         }
 
         int mid = mid(left, right);
@@ -18,11 +18,13 @@ public class Inversions {
         Tuple<int[], Long> t1 = mergeSortWithInversion(a, left, mid);
         Tuple<int[], Long> t2 = mergeSortWithInversion(a, mid + 1, right);
 
-        return merge(t1.left, t2.left);
+        return merge(t1, t2);
     }
 
-    private static Tuple<int[], Long> merge(int[] a, int[] b) {
-        long nOfInversions = 0;
+    private static Tuple<int[], Long> merge(Tuple<int[], Long> t1, Tuple<int[], Long> t2) {
+        long nOfInversions = t1.right + t2.right;
+        int[] a = t1.left;
+        int[] b = t2.left;
         int[] sorted = new int[a.length + b.length];
 
         int i = 0;
@@ -31,7 +33,6 @@ public class Inversions {
         while (i < a.length && j < b.length) {
             if (a[i] <= b[j]) {
                 sorted[i+j] = a[i++];
-                nOfInversions += b.length - j;
             } else {
                 sorted[i+j] = b[j++];
                 nOfInversions += a.length - i;
