@@ -1,12 +1,13 @@
 package io.github.vcvitaly.algo.design._04_div_and_conq;
 
 import io.github.vcvitaly.algo.Helper;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +15,7 @@ class InversionsTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void verifiesArrayIsSorted(Param param) {
+    void verifiesNumberOfInversions(Param param) {
         System.out.println(Helper.shortToString(param));
 
         assertThat(
