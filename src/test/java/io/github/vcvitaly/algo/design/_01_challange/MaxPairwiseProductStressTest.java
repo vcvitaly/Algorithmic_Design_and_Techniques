@@ -2,7 +2,6 @@ package io.github.vcvitaly.algo.design._01_challange;
 
 import java.util.Arrays;
 import java.util.Random;
-import org.junit.jupiter.api.Test;
 
 class MaxPairwiseProductStressTest {
 
@@ -11,7 +10,6 @@ class MaxPairwiseProductStressTest {
     private int maxNums = 1_000;
     private int upperBound = 200_000;
 
-    @Test
     public void testMain() throws Exception {
         while (true) {
             int n = between(2, maxNums);
