@@ -1,10 +1,14 @@
 package io.github.vcvitaly.ds._01_basics;
 
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.rnorth.ducttape.timeouts.Timeouts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,11 +23,10 @@ class TreeHeightTest {
         );
 
         assertThat(
-                /*Timeouts.getWithTimeout(
+                Timeouts.getWithTimeout(
                         1_500, TimeUnit.MILLISECONDS,
                         () -> new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
-                )*/
-                new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+                )
         ).isEqualTo(param.treeHeight);
     }
 
@@ -31,17 +34,25 @@ class TreeHeightTest {
         return Stream.of(
                 Param.of(new int[] {-1, 0}, 2),
                 Param.of(new int[] {4, -1, 4, 1, 1}, 3),
-                Param.of(new int[] {-1, 0 , 4, 0, 3}, 4)/*,
-                Param.of(
-                        IntStream.concat(
-                                IntStream.concat(
-                                        IntStream.of(-1),
-                                        IntStream.rangeClosed(0, 99_996)
-                                ),
-                                IntStream.of(0)
-                        ).toArray(), 99_998
-                )*/
+                Param.of(new int[] {-1, 0 , 4, 0, 3}, 4)
         );
+    }
+
+    @Test
+    void performanceTest() {
+        Param param = Param.of(
+                IntStream.concat(
+                        IntStream.concat(
+                                IntStream.of(-1),
+                                IntStream.rangeClosed(0, 990_996)
+                        ),
+                        IntStream.of(0)
+                ).toArray(), 990_998
+        );
+
+        assertThat(
+                new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+        ).isEqualTo(param.treeHeight);
     }
 
     @Data

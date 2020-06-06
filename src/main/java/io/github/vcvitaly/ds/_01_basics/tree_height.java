@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class tree_height {
@@ -61,6 +63,7 @@ public class tree_height {
             return maxHeight;
         }
 
+        // Pre-order traversal is used
         int computeHeightFast() {
             Node[] nodes = Arrays.stream(parents)
                     .mapToObj(Node::new)
@@ -69,58 +72,56 @@ public class tree_height {
             Queue<Node> queue = new LinkedList<>();
 
             for (int i = 0; i < parents.length; i++) {
-                if (parents[i] == NULL) {
-                    Node root = nodes[i];
-                    root.height = ROOT_HEIGHT;
-                    queue.add(root);
+                Node node = nodes[i];
+                int ithParentIndex = parents[i];
+                if (ithParentIndex == NULL) {
+                    node.height = ROOT_HEIGHT;
+                    queue.add(node);
                 } else {
-                    nodes[i].parent = nodes[parents[i]];
+                    nodes[ithParentIndex].getChildrenWithInit().add(node);
                 }
             }
 
-//            int maxHeight = 0;
-
+            int maxHeight = 0;
             while (!queue.isEmpty()) {
                 Node node = queue.poll();
-
+                Set<Node> children = node.getChildren();
+                if (children != null) {
+                    for (Node child : children) {
+                        child.height = node.height + 1;
+                        if (child.height > maxHeight) {
+//                            maxHeight = child.height;
+                        }
+                        queue.add(child);
+                    }
+                }
             }
 
-            /*for (int vertex = 0; vertex < n; vertex++) {
-                int height = 0;
-
-                Queue<Node> queue = new LinkedList<>();
-
-
-
-                if (parent != null) {
-                    nodes[vertex] = new Node(vertex, parent, parent.height + 1);
-                } else {
-                    int i;
-                    for (i = vertex; parents[i] != -1 || nodes[i] != null; i = this.parents[i]) {
-
-                    }
-                    height  = heights[vertex] = heights[i] + 1;
-                }
-
-                maxHeight = Math.max(maxHeight, height);
-            }*/
-            return 0;
+            return Arrays.stream(nodes)
+                    .map(node -> node.height)
+                    .max(Integer::compare)
+                    .orElse(0);
         }
     }
 
     private static class Node {
         int value;
-        Node parent;
+        private Set<Node> children;
         int height;
-
-        public Node(int value, Node parent, int height) {
-            this.value = value;
-            this.parent = parent;
-            this.height = height;
-        }
 
         public Node(int value) {
             this.value = value;
+        }
+
+        public Set<Node> getChildren() {
+            return children;
+        }
+
+        public Set<Node> getChildrenWithInit() {
+            if (children == null) {
+                children = new HashSet<>();
+            }
+            return children;
         }
     }
 
@@ -137,7 +138,6 @@ public class tree_height {
     public void run() throws IOException {
         TreeHeight tree = new TreeHeight();
         tree.read();
-        System.out.println(tree.computeHeight());
+        System.out.println(tree.computeHeightFast());
     }
 }
-
