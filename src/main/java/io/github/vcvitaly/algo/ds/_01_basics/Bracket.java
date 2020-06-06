@@ -1,4 +1,4 @@
-package io.github.vcvitaly.ds._01_basics;
+package io.github.vcvitaly.algo.ds._01_basics;
 
 import java.io.BufferedReader;
 import java.io.IOException;
