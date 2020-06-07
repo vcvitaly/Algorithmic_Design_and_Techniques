@@ -1,6 +1,8 @@
-package io.github.vcvitaly.ds._01_basics;
+package io.github.vcvitaly.algo.ds._01_basics;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,7 @@ class TreeHeightTest {
                         1_500, TimeUnit.MILLISECONDS,
                         () -> new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
                 )
-        ).isEqualTo(param.treeHeight);
+        ).isEqualTo(param.maxTreeHeight);
     }
 
     static Stream<Param> params() {
@@ -39,7 +41,7 @@ class TreeHeightTest {
     }
 
     @Test
-    void performanceTest() {
+    void unbalancedTreePerformanceTest() {
         Param param = Param.of(
                 IntStream.concat(
                         IntStream.concat(
@@ -52,14 +54,33 @@ class TreeHeightTest {
 
         assertThat(
                 new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
-        ).isEqualTo(param.treeHeight);
+        ).isEqualTo(param.maxTreeHeight);
+    }
+
+    @Test
+    void flatTreePerformanceTest() {
+        Param param = Param.of(
+                IntStream.concat(
+                        IntStream.of(-1),
+                        IntStream.rangeClosed(0, 990_996).map(i -> 0)
+                        ).toArray(), 2
+        );
+
+        assertThat(
+                new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+        ).isEqualTo(param.maxTreeHeight);
+    }
+
+    @Test
+    void randomTest() {
+        List<Integer> ints = IntStream.rangeClosed(0, 100_000).boxed().collect(Collectors.toList());
     }
 
     @Data
     @AllArgsConstructor(staticName = "of")
     private static class Param {
         private int[] nodeParents;
-        private int treeHeight;
+        private int maxTreeHeight;
     }
 
 }

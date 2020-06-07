@@ -1,4 +1,4 @@
-package io.github.vcvitaly.ds._01_basics;
+package io.github.vcvitaly.algo.ds._01_basics;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,6 +65,10 @@ public class tree_height {
 
         // Pre-order traversal is used
         int computeHeightFast() {
+            if (parents.length <= 2) {
+                return parents.length;
+            }
+
             Node[] nodes = Arrays.stream(parents)
                     .mapToObj(Node::new)
                     .toArray(Node[]::new);
@@ -90,17 +94,14 @@ public class tree_height {
                     for (Node child : children) {
                         child.height = node.height + 1;
                         if (child.height > maxHeight) {
-//                            maxHeight = child.height;
+                            maxHeight = child.height;
                         }
                         queue.add(child);
                     }
                 }
             }
 
-            return Arrays.stream(nodes)
-                    .map(node -> node.height)
-                    .max(Integer::compare)
-                    .orElse(0);
+            return maxHeight;
         }
     }
 
