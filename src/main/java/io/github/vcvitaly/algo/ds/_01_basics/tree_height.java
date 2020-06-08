@@ -3,7 +3,6 @@ package io.github.vcvitaly.algo.ds._01_basics;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class tree_height {
@@ -59,7 +58,9 @@ public class tree_height {
             return maxHeight;
         }
 
-        // Pre-order traversal is used
+        // Pre-order traversal is used.
+        // TODO can be furter improved by using an array to remember heights instead of a node class to reduce the space complexity and
+        // possibly do that in CPU cache
         int computeHeightFast() {
             if (parents.length <= 2) {
                 return parents.length;
@@ -79,23 +80,10 @@ public class tree_height {
             }
 
             int maxHeight = 0;
-            Stack<Node> stack = new Stack<>();
             for (Node node : nodes) {
-                if (node.height == 0)
-                if (node.height >= maxHeight) {
-                    maxHeight = node.height;
-                } else {
-                    while (node.height == 0) {
-                        stack.push(node);
-                        node = node.parent;
-                    }
-                    for (Node nodeOnStack : stack) {
-                        nodeOnStack.height = node.height + 1;
-                        node = nodeOnStack;
-                    }
-                    if (node.height >= maxHeight) {
-                        maxHeight = node.height;
-                    }
+                int nodeHeight = node.getHeightOrCompute();
+                if (maxHeight < nodeHeight) {
+                    maxHeight = nodeHeight;
                 }
             }
 
@@ -110,6 +98,13 @@ public class tree_height {
 
         public Node(int value) {
             this.value = value;
+        }
+
+        public int getHeightOrCompute() {
+            if (height == 0) {
+                height = parent.getHeightOrCompute() + 1;
+            }
+            return height;
         }
     }
 
