@@ -3,11 +3,7 @@ package io.github.vcvitaly.algo.ds._01_basics;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class tree_height {
@@ -69,34 +65,36 @@ public class tree_height {
                 return parents.length;
             }
 
-            Node[] nodes = Arrays.stream(parents)
-                    .mapToObj(Node::new)
-                    .toArray(Node[]::new);
-
-            Queue<Node> queue = new LinkedList<>();
+            Node[] nodes = new Node[parents.length];
+            for (int i = 0; i < parents.length; i++) {
+                nodes[i] = new Node(i);
+            }
 
             for (int i = 0; i < parents.length; i++) {
-                Node node = nodes[i];
-                int ithParentIndex = parents[i];
-                if (ithParentIndex == NULL) {
-                    node.height = ROOT_HEIGHT;
-                    queue.add(node);
+                if (parents[i] == NULL) {
+                    nodes[i].height = ROOT_HEIGHT;
                 } else {
-                    nodes[ithParentIndex].getChildrenWithInit().add(node);
+                    nodes[i].parent = nodes[parents[i]];
                 }
             }
 
             int maxHeight = 0;
-            while (!queue.isEmpty()) {
-                Node node = queue.poll();
-                Set<Node> children = node.getChildren();
-                if (children != null) {
-                    for (Node child : children) {
-                        child.height = node.height + 1;
-                        if (child.height > maxHeight) {
-                            maxHeight = child.height;
-                        }
-                        queue.add(child);
+            Stack<Node> stack = new Stack<>();
+            for (Node node : nodes) {
+                if (node.height == 0)
+                if (node.height >= maxHeight) {
+                    maxHeight = node.height;
+                } else {
+                    while (node.height == 0) {
+                        stack.push(node);
+                        node = node.parent;
+                    }
+                    for (Node nodeOnStack : stack) {
+                        nodeOnStack.height = node.height + 1;
+                        node = nodeOnStack;
+                    }
+                    if (node.height >= maxHeight) {
+                        maxHeight = node.height;
                     }
                 }
             }
@@ -107,22 +105,11 @@ public class tree_height {
 
     private static class Node {
         int value;
-        private Set<Node> children;
+        Node parent;
         int height;
 
         public Node(int value) {
             this.value = value;
-        }
-
-        public Set<Node> getChildren() {
-            return children;
-        }
-
-        public Set<Node> getChildrenWithInit() {
-            if (children == null) {
-                children = new HashSet<>();
-            }
-            return children;
         }
     }
 
