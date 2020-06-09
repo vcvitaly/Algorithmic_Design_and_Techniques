@@ -27,7 +27,7 @@ class TreeHeightTest {
         assertThat(
                 Timeouts.getWithTimeout(
                         1_500, TimeUnit.MILLISECONDS,
-                        () -> new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+                        () -> new TreeHeight.Tree(param.nodeParents.length, param.nodeParents).computeHeightFast()
                 )
         ).isEqualTo(param.maxTreeHeight);
     }
@@ -53,7 +53,7 @@ class TreeHeightTest {
         );
 
         assertThat(
-                new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+                new TreeHeight.Tree(param.nodeParents.length, param.nodeParents).computeHeightFast()
         ).isEqualTo(param.maxTreeHeight);
     }
 
@@ -67,7 +67,7 @@ class TreeHeightTest {
         );
 
         assertThat(
-                new tree_height.TreeHeight(param.nodeParents.length, param.nodeParents).computeHeightFast()
+                new TreeHeight.Tree(param.nodeParents.length, param.nodeParents).computeHeightFast()
         ).isEqualTo(param.maxTreeHeight);
     }
 

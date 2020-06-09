@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class tree_height {
+public class TreeHeight {
     static class FastScanner {
         StringTokenizer tok = new StringTokenizer("");
         BufferedReader in;
@@ -24,18 +24,18 @@ public class tree_height {
         }
     }
 
-    public static class TreeHeight {
+    public static class Tree {
         private static final int ROOT_HEIGHT = 1;
         public static final int NULL = -1;
         int n;
         int parents[];
 
-        public TreeHeight(int n, int[] parents) {
+        public Tree(int n, int[] parents) {
             this.n = n;
             this.parents = parents;
         }
 
-        public TreeHeight() {
+        public Tree() {
         }
 
         void read() throws IOException {
@@ -111,7 +111,7 @@ public class tree_height {
     public static void main(String[] args) throws IOException {
         new Thread(null, () -> {
             try {
-                new tree_height().run();
+                new TreeHeight().run();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -119,7 +119,7 @@ public class tree_height {
     }
 
     public void run() throws IOException {
-        TreeHeight tree = new TreeHeight();
+        Tree tree = new Tree();
         tree.read();
         System.out.println(tree.computeHeightFast());
     }
