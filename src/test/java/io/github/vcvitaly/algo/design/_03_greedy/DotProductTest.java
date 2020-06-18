@@ -82,10 +82,10 @@ class DotProductTest {
 
     private static List<List<Integer>> permutations(List<Integer> a) {
         if (a.size() == 1) {
-            return List.of(new LinkedList<>(a));
+            return Arrays.asList(new LinkedList<>(a));
         }
         if (a.size() == 2) {
-            return List.of(
+            return Arrays.asList(
                     new LinkedList<>(a),
                     new LinkedList<>(Arrays.asList(a.get(1), a.get(0)))
             );
@@ -97,9 +97,7 @@ class DotProductTest {
             List<List<Integer>> permutationsWithoutI = permutations(
                     a.stream()
                             .filter(
-                                    elem -> {
-                                        return !elem.equals(aI);
-                                    }
+                                    elem -> !elem.equals(aI)
                             ).collect(Collectors.toList())
             );
             permutationsWithoutI.forEach(list -> list.add(0, aI));
@@ -111,14 +109,14 @@ class DotProductTest {
 
     @Test
     void testPermutations() {
-        assertThat(permutations(List.of(1, 2, 3,4)))
+        assertThat(permutations(Arrays.asList(1, 2, 3,4)))
                 .containsExactlyInAnyOrder(
-                        List.of(1, 2, 3),
-                        List.of(1, 3, 2),
-                        List.of(2, 1, 3),
-                        List.of(2, 3, 1),
-                        List.of(3, 1, 2),
-                        List.of(3, 2, 1)
+                        Arrays.asList(1, 2, 3),
+                        Arrays.asList(1, 3, 2),
+                        Arrays.asList(2, 1, 3),
+                        Arrays.asList(2, 3, 1),
+                        Arrays.asList(3, 1, 2),
+                        Arrays.asList(3, 2, 1)
                 );
     }
 }
