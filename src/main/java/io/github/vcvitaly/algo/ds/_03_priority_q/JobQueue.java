@@ -5,32 +5,40 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.stream.IntStream;
 
 public class JobQueue {
-    private int numWorkers;
-    private Job[] jobs;
-
     private FastScanner in;
     private PrintWriter out;
 
-    public static void main(String[] args) throws IOException {
-        new JobQueue().solve();
+    public JobQueue(FastScanner in, PrintWriter out) {
+        this.in = in;
+        this.out = out;
     }
 
-    private void readData() throws IOException {
-        numWorkers = in.nextInt();
+    public static void main(String[] args) throws IOException {
+
+        new JobQueue(
+                new FastScanner(), new PrintWriter(new BufferedOutputStream(System.out))
+        ).solve();
+    }
+
+    private Task readData() throws IOException {
+        int numWorkers = in.nextInt();
         int m = in.nextInt();
-        jobs = new Job[m];
+        Job[] jobs = new Job[m];
         for (int i = 0; i < m; ++i) {
             jobs[i] = new Job(in.nextInt());
         }
+
+        return new Task(numWorkers, jobs);
     }
 
     private void writeResponse(ProcessingEvent[] processingEvents) {
-        for (int i = 0; i < jobs.length; ++i) {
+        for (int i = 0; i < processingEvents.length; ++i) {
             out.println(String.format("%d %d", processingEvents[i].threadIndex, processingEvents[i].startTime));
         }
     }
@@ -39,7 +47,7 @@ public class JobQueue {
         // TODO: replace this code with a faster algorithm.
         ProcessingEvent[] processingEvents = new ProcessingEvent[jobs.length];
 
-        ThreadInfo[] threads = IntStream.range(0, numWorkers).mapToObj(i -> new ThreadInfo()).toArray(ThreadInfo[]::new);
+        ThreadInfo[] threads = IntStream.range(0, numWorkers).mapToObj(ThreadInfo::new).toArray(ThreadInfo[]::new);
 
         for (int i = 0; i < jobs.length; i++) {
             int duration = jobs[i].duration;
@@ -55,11 +63,29 @@ public class JobQueue {
         return processingEvents;
     }
 
+    ProcessingEvent[] assignJobsFast(int numWorkers, Job[] jobs) {
+        ProcessingEvent[] processingEvents = new ProcessingEvent[jobs.length];
+
+        Heap<ThreadInfo> threads = new Heap<>(
+                IntStream.range(0, numWorkers)
+                        .mapToObj(ThreadInfo::new)
+                        .toArray(ThreadInfo[]::new)
+        );
+
+        for (int i = 0; i < jobs.length; i++) {
+            int duration = jobs[i].duration;
+            ThreadInfo bestWorker = threads.extractMax();
+            processingEvents[i] = new ProcessingEvent(bestWorker.threadIndex, bestWorker.nextFreeTime);
+            bestWorker.nextFreeTime += duration;
+            threads.insert(bestWorker);
+        }
+
+        return processingEvents;
+    }
+
     public void solve() throws IOException {
-        in = new FastScanner();
-        out = new PrintWriter(new BufferedOutputStream(System.out));
-        readData();
-        ProcessingEvent[] processingEvents = assignJobsNaive(numWorkers, jobs);
+        Task task = readData();
+        ProcessingEvent[] processingEvents = assignJobsNaive(task.numWorkers, task.jobs);
         writeResponse(processingEvents);
         out.close();
     }
@@ -85,6 +111,16 @@ public class JobQueue {
         }
     }
 
+    static class Task {
+        int numWorkers;
+        Job[] jobs;
+
+        public Task(int numWorkers, Job[] jobs) {
+            this.numWorkers = numWorkers;
+            this.jobs = jobs;
+        }
+    }
+
     static class Job {
         int duration;
 
@@ -100,14 +136,40 @@ public class JobQueue {
         }
     }
 
-    static class ThreadInfo {
+    static class ThreadInfo implements Comparable<ThreadInfo> {
+        int threadIndex;
         int nextFreeTime;
+
+        public ThreadInfo(int threadIndex) {
+            this.threadIndex = threadIndex;
+        }
 
         @Override
         public String toString() {
             return "Thread{" +
-                    "nextFreeTime=" + nextFreeTime +
+                    "i=" + threadIndex +
+                    ", nfT=" + nextFreeTime +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ThreadInfo that = (ThreadInfo) o;
+            return threadIndex == that.threadIndex &&
+                    nextFreeTime == that.nextFreeTime;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(threadIndex, nextFreeTime);
+        }
+
+        @Override
+        public int compareTo(ThreadInfo o) {
+            int compareTime = Integer.compare(nextFreeTime, o.nextFreeTime) * -1;
+            return compareTime != 0 ? compareTime : Integer.compare(threadIndex, o.threadIndex) * -1;
         }
     }
 
@@ -140,6 +202,97 @@ public class JobQueue {
         @Override
         public int hashCode() {
             return Objects.hash(threadIndex, startTime);
+        }
+    }
+
+    static class  Heap<E extends Comparable<E>> {
+        private E[] a;
+        private int boundaryIndex;
+
+        public Heap(E[] a) {
+            this.a = a;
+            boundaryIndex = a.length - 1;
+        }
+
+        private void buildHeap() {
+            for (int i = a.length / 2; i >= 0; i--) {
+                siftDown(i);
+            }
+        }
+
+        E extractMax() {
+            E result = a[0];
+            a[0] = a[boundaryIndex];
+            --boundaryIndex;
+            siftDown(0);
+            return result;
+        }
+
+        void insert(E e) {
+            if (boundaryIndex + 1 == a.length) {
+                throw new ArrayIndexOutOfBoundsException("Internal heap array has reached it maximum capacity, cannot add " + e);
+            }
+            ++boundaryIndex;
+            a[boundaryIndex] = e;
+            siftUp(boundaryIndex);
+        }
+
+        void siftUp (int i) {
+            int parent;
+            while (i > 0 && a[parent = parent(i)].compareTo(a[i]) < 0) {
+                swap(parent, i);
+                i = parent;
+            }
+        }
+
+        void siftDown(int i) {
+            int maxIndex;
+            while (i != (maxIndex = maxIndex(i))) {
+                swap(i, maxIndex);
+            }
+        }
+
+        private int maxIndex(int i) {
+            int maxIndex = i;
+
+            int l = leftChild(i);
+            if (hasChild(l) && a[l].compareTo(a[maxIndex]) > 0) {
+                maxIndex = l;
+            }
+
+            int r = rightChild(i);
+            if (hasChild(r) && a[r].compareTo(a[maxIndex]) > 0) {
+                maxIndex = r;
+            }
+
+            return maxIndex;
+        }
+
+        private boolean hasChild(int childIndex) {
+            return childIndex < a.length;
+        }
+
+        private int parent(int i) {
+            return (i - 1) / 2;
+        }
+
+        private int leftChild(int i) {
+            return i * 2 + 1;
+        }
+
+        private int rightChild(int i) {
+            return leftChild(i) + 1;
+        }
+
+        private void swap(int i, int j) {
+            E tmp = a[i];
+            a[i] = a[j];
+            a[j] = tmp;
+        }
+
+        @Override
+        public String toString() {
+            return "Heap{" + Arrays.toString(Arrays.copyOfRange(a, 0, boundaryIndex + 1)) + "}";
         }
     }
 }

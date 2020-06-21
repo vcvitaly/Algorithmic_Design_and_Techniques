@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -15,15 +16,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class JobQueueTest {
 
-    private JobQueue jobQueue = new JobQueue();
+    private JobQueue jobQueue = new JobQueue(null, null);
 
     @ParameterizedTest
     @MethodSource("params")
     void assignsJobs(Param param) {
         System.out.println(Helper.shortToString(param));
 
-        assertThat(jobQueue.assignJobsNaive(param.numWorkers, param.jobs))
+        assertThat(jobQueue.assignJobsFast(param.numWorkers, param.jobs))
                 .containsExactly(param.processingEvents);
+    }
+
+    @Test
+    void performanceTest() {
+        Param param = params().filter(p -> p.numWorkers == 4).findFirst().get();
+
+        for (int i = 0; i < 15_000; i++) {
+            assertThat(jobQueue.assignJobsFast(param.numWorkers, param.jobs))
+                    .containsExactly(param.processingEvents);
+        }
     }
 
     static Stream<Param> params() {
