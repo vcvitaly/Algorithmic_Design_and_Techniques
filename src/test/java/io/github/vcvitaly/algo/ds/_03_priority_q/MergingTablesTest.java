@@ -3,11 +3,16 @@ package io.github.vcvitaly.algo.ds._03_priority_q;
 import io.github.vcvitaly.algo.Helper;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.rnorth.ducttape.timeouts.Timeouts;
 
 import static io.github.vcvitaly.algo.ds._03_priority_q.MergingTables.Merge;
 import static io.github.vcvitaly.algo.ds._03_priority_q.MergingTables.Table;
@@ -20,9 +25,10 @@ class MergingTablesTest {
     void appliesMergesAndReturnsCorrectMaxRowsAtEachSnapshot(Param param) {
         System.out.println(Helper.shortToString(param));
 
-        assertThat(
-                new MergingTables(param.tables).applyMergesAndReturnMaxSizes(param.merges)
-        ).containsExactlyElementsOf(param.maxSizes);
+        List<Integer> maxSizes = new MergingTables(param.tables).applyMergesAndReturnMaxSizes(param.merges);
+
+        System.out.println(maxSizes);
+        assertThat(maxSizes).containsExactlyElementsOf(param.maxSizes);
     }
 
     static Stream<Param> params() {
@@ -48,6 +54,24 @@ class MergingTablesTest {
                         },
                         Arrays.asList(10, 10, 10, 11)
                 )
+        );
+    }
+
+    @Test
+    void performanceTest() {
+        Random r = new Random(123_456_789L);
+        int nTables = 100_000;
+        int nMerges = 100_000;
+        int nRowsBound = 10_000;
+
+        Table[] tables = r.ints(nTables, 0, nRowsBound).mapToObj(Table::new).toArray(Table[]::new);
+        Merge[] merges = IntStream.range(0, nMerges)
+                .mapToObj(i -> new Merge(r.nextInt(nTables), r.nextInt(nTables)))
+                .toArray(Merge[]::new);
+
+        Timeouts.getWithTimeout(
+                6_000, TimeUnit.MILLISECONDS,
+                () -> new MergingTables(tables).applyMergesAndReturnMaxSizes(merges)
         );
     }
 

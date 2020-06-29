@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -14,10 +15,12 @@ import java.util.StringTokenizer;
 public class MergingTables {
     private Table[] tables;
 
+    // TODO the maximumNumberOfRows variable seems specific to this particular problem, how to avoid a lot of case-specific metrics?
     private int maximumNumberOfRows;
 
     public MergingTables(Table[] tables) {
         this.tables = tables;
+        maximumNumberOfRows = Arrays.stream(tables).map(t -> t.numberOfRows).max(Integer::compareTo).get();
     }
 
     public static void main(String[] args) {
@@ -35,8 +38,8 @@ public class MergingTables {
 
         Merge[] merges = new Merge[m];
         for (int i = 0; i < m; i++) {
-            int destination = reader.nextInt() - 1;
-            int source = reader.nextInt() - 1;
+            int destination = reader.nextInt();
+            int source = reader.nextInt();
             merges[i] = new Merge(destination, source);
         }
 
@@ -48,57 +51,74 @@ public class MergingTables {
         writer.writer.flush();
     }
 
+    // TODO However, you will need to store the number of the actual
+    // second table to which you were requested to merge the first table in the parent node of the corresponding
+    // Disjoint Set, and you will need an additional field in the nodes of Disjoint Set Union to store it.
     void merge(Table destination, Table source) {
         Table realDestination = destination.getParent();
         Table realSource = source.getParent();
         if (realDestination == realSource) {
             return;
         }
-        // merge two components here
-        // use rank heuristic
+        if (realDestination.rank > realSource.rank) {
+            copyData(realDestination, realSource);
+            realSource.parent = realDestination;
+        } else {
+            copyData(realSource, realDestination);
+            realDestination.parent = realSource;
+            if (realDestination.rank == realSource.rank) {
+                realSource.rank++;
+            }
+        }
     }
 
     List<Integer> applyMergesAndReturnMaxSizes(Merge[] merges) {
         List<Integer> maxSizes = new ArrayList<>();
 
         for (Merge merge : merges) {
-            merge(tables[merge.destinationIndex], tables[merge.sourceIndex]);
+            merge(tables[merge.destinationIndex - 1], tables[merge.sourceIndex - 1]);
             maxSizes.add(maximumNumberOfRows);
         }
 
         return maxSizes;
     }
 
-    static class Task {
-        Table[] tables;
-        Merge[] merges;
+    private void copyData(Table destination, Table source) {
+        destination.numberOfRows += source.numberOfRows;
+        source.numberOfRows = 0;
 
-        public Task(Table[] tables, Merge[] merges) {
-            this.tables = tables;
-            this.merges = merges;
+        // TODO  is it logical to do that in a method whose name doesn't reflect the fact that metric is updated?
+        if (destination.numberOfRows > maximumNumberOfRows) {
+            maximumNumberOfRows = destination.numberOfRows;
         }
     }
 
     static class Table {
+        private static int num = 1;
+
+        int id;
         Table parent;
         int rank;
         int numberOfRows;
 
         Table(int numberOfRows) {
+            id = num++;
             this.numberOfRows = numberOfRows;
             rank = 0;
             parent = this;
         }
 
         Table getParent() {
-            // find super parent and compress path
+            if (this != parent) {
+                parent = parent.getParent();
+            }
             return parent;
         }
 
         @Override
         public String toString() {
             return "Table{" +
-                    "parent=" + parent +
+                    "id=" + id +
                     ", rank=" + rank +
                     ", numberOfRows=" + numberOfRows +
                     '}';
