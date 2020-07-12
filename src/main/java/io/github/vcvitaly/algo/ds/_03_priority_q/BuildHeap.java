@@ -11,14 +11,17 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class BuildHeap {
-    private FastScanner in;
-    private PrintWriter out;
 
     public static void main(String[] args) throws IOException {
-        new BuildHeap().solve();
+        int[] data = readData();
+
+        List<Swap> swaps = new BuildHeap().generateSwapsFast(data);
+
+        writeResponse(swaps);
     }
 
-    private int[] readData() throws IOException {
+    private static int[] readData() throws IOException {
+        FastScanner in = new FastScanner();
         int n = in.nextInt();
         int[] data = new int[n];
         for (int i = 0; i < n; ++i) {
@@ -28,20 +31,18 @@ public class BuildHeap {
         return data;
     }
 
-    private void writeResponse(List<Swap> swaps) {
-        out.println(swaps.size());
-        for (Swap swap : swaps) {
-            out.println(swap.index1 + " " + swap.index2);
+    private static void writeResponse(List<Swap> swaps) {
+        try (PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out))) {
+            out.println(swaps.size());
+            for (Swap swap : swaps) {
+                out.println(swap.index1 + " " + swap.index2);
+            }
         }
     }
 
     List<Swap> generateSwapsNaive(int[] data) {
         List<Swap> swaps = new ArrayList<>();
-        // The following naive implementation just sorts
-        // the given sequence using selection sort algorithm
-        // and saves the resulting sequence of swaps.
-        // This turns the given array into a heap,
-        // but in the worst case gives a quadratic number of swaps.
+
         for (int i = 0; i < data.length; ++i) {
             for (int j = i + 1; j < data.length; ++j) {
                 if (data[i] > data[j]) {
@@ -71,6 +72,7 @@ public class BuildHeap {
         while (i != (minIndex = minIndex(a, i))) {
             swap(a, i, minIndex);
             swaps.add(new Swap(i, minIndex));
+            i = minIndex;
         }
 
         return swaps;
@@ -110,15 +112,6 @@ public class BuildHeap {
         data[j] = tmp;
     }
 
-    public void solve() throws IOException {
-        in = new FastScanner();
-        out = new PrintWriter(new BufferedOutputStream(System.out));
-        int[] data = readData();
-        List<Swap> swaps = generateSwapsNaive(data);
-        writeResponse(swaps);
-        out.close();
-    }
-
     static class Swap {
         int index1;
         int index2;
@@ -131,8 +124,8 @@ public class BuildHeap {
         @Override
         public String toString() {
             return "Swap{" +
-                    "index1=" + index1 +
-                    ", index2=" + index2 +
+                    "i1=" + index1 +
+                    ", i2=" + index2 +
                     '}';
         }
 

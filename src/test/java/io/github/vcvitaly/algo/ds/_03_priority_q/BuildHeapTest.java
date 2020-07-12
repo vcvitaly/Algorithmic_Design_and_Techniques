@@ -4,7 +4,7 @@ import io.github.vcvitaly.algo.Helper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.rnorth.ducttape.timeouts.Timeouts;
 
 import static io.github.vcvitaly.algo.ds._03_priority_q.BuildHeap.Swap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,26 +27,22 @@ class BuildHeapTest {
         System.out.println(Helper.shortToString(param));
 
         // Act
-        List<Swap> swaps = buildHeap.generateSwapsNaive(param.a);
+        List<Swap> swaps = buildHeap.generateSwapsFast(param.a);
         System.out.println(Arrays.toString(param.a));
 
         // Assert
-        assertThat(param.a).containsExactly(param.heap);
-        assertThat(swaps)
-                .containsExactlyElementsOf(param.swaps);
+        assertThat(swaps).containsExactlyElementsOf(param.swaps);
+        assertThat(param.a).isEqualTo(param.heap);
     }
 
     @Test
     void performanceTest() {
-        Random r = new Random();
-        int[] a = IntStream.range(0, 100_000).map(i -> r.nextInt(1_000_000_000)).distinct().toArray();
-        int[] aSorted = Arrays.copyOf(a, a.length);
-        Arrays.sort(aSorted);
+        int[] a = IntStream.range(0, 100_000).map(i -> i * 1_000).toArray();
 
-        List<Swap> swaps = buildHeap.generateSwapsNaive(a);
-
-        assertThat(a).containsExactly(aSorted);
-        assertThat(swaps).isNotEmpty();
+        Timeouts.doWithTimeout(
+                1_500, TimeUnit.SECONDS,
+                () -> buildHeap.generateSwapsFast(a)
+        );
     }
 
     static Stream<Param> params() {
