@@ -3,6 +3,7 @@ package io.github.vcvitaly.algo.ds._04_binary_trees;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class IsCorrectBst {
@@ -36,8 +37,27 @@ public class IsCorrectBst {
         }
 
         boolean isBinarySearchTree() {
-            // Implement correct algorithm here
-            return true;
+            if (nodes.length <= 1) {
+                return true;
+            }
+            return isBinarySearchTree(0);
+        }
+
+        private boolean isBinarySearchTree(int nodeI) {
+            Node node = nodes[nodeI];
+            return (
+                    node.left == -1 || nodes[node.left].key <= node.key) && (isBinarySearchTree(node.left)
+            ) &&
+                    (
+                            node.right == -1 || nodes[node.right].key >= node.key) && (isBinarySearchTree(node.right)
+                    );
+        }
+
+        @Override
+        public String toString() {
+            return "BinaryTree{" +
+                    "nodes=" + Arrays.toString(nodes) +
+                    '}';
         }
 
         static class Node {
@@ -45,10 +65,19 @@ public class IsCorrectBst {
             int left;
             int right;
 
-            Node(int key, int left, int right) {
+            public Node(int key, int left, int right) {
+                this.key = key;
                 this.left = left;
                 this.right = right;
-                this.key = key;
+            }
+
+            @Override
+            public String toString() {
+                return "Node{" +
+                        "key=" + key +
+                        ", left=" + left +
+                        ", right=" + right +
+                        '}';
             }
         }
     }
