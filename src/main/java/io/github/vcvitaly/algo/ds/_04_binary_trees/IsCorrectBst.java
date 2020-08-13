@@ -40,17 +40,34 @@ public class IsCorrectBst {
             if (nodes.length <= 1) {
                 return true;
             }
-            return isBinarySearchTree(0);
+
+            try {
+                subtreeMaxVal(0);
+                return true;
+            } catch (IllegalStateException e) {
+                return false;
+            }
         }
 
-        private boolean isBinarySearchTree(int nodeI) {
-            Node node = nodes[nodeI];
-            return (
-                    node.left == -1 || nodes[node.left].key <= node.key) && (isBinarySearchTree(node.left)
-            ) &&
-                    (
-                            node.right == -1 || nodes[node.right].key >= node.key) && (isBinarySearchTree(node.right)
-                    );
+        private int subtreeMaxVal(int i) {
+            Node node = nodes[i];
+            int max = node.key;
+
+            if (node.left > -1) {
+                int left = subtreeMaxVal(node.left);
+                if (left >= node.key) {
+                    throw new IllegalStateException(String.format("Left key %d is >= than the node %d", left, node.key));
+                }
+            }
+            if (node.right > -1) {
+                int right = subtreeMaxVal(node.right);
+                if (right <= node.key) {
+                    throw new IllegalStateException(String.format("Right key %d is <= than the node %d", right, node.key));
+                }
+                max = right;
+            }
+
+            return max;
         }
 
         @Override
