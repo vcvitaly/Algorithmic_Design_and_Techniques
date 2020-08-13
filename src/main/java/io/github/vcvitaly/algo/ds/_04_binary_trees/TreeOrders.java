@@ -3,11 +3,9 @@ package io.github.vcvitaly.algo.ds._04_binary_trees;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class TreeOrders {
@@ -39,17 +37,17 @@ public class TreeOrders {
             return Collections.singletonList(tree.key[0]);
         }
 
-        return inOrderTraversal(0);
+        return inOrder(0);
     }
 
-    List<Integer> inOrderTraversal(int rootIndex) {
+    private List<Integer> inOrder(int rootIndex) {
         List<Integer> list = new LinkedList<>();
         if (tree.left[rootIndex] > -1) {
-            list.addAll(inOrderTraversal(tree.left[rootIndex]));
+            list.addAll(inOrder(tree.left[rootIndex]));
         }
         list.add(tree.key[rootIndex]);
         if (tree.right[rootIndex] > -1) {
-            list.addAll(inOrderTraversal(tree.right[rootIndex]));
+            list.addAll(inOrder(tree.right[rootIndex]));
         }
         return list;
     }
@@ -62,25 +60,42 @@ public class TreeOrders {
             return Collections.singletonList(tree.key[0]);
         }
 
-        List<Integer> result = new ArrayList<>();
+        return preOrder(0);
+    }
 
-        Queue<Integer> nodes = new LinkedList<>();
-        nodes.add(0);
-
-        while (!nodes.isEmpty()) {
-            int nodeIndex = nodes.poll();
-            result.add(tree.key[nodeIndex]);
+    private List<Integer> preOrder(int rootIndex) {
+        List<Integer> list = new LinkedList<>();
+        list.add(tree.key[rootIndex]);
+        if (tree.left[rootIndex] > -1) {
+            list.addAll(preOrder(tree.left[rootIndex]));
         }
-
-        return result;
+        if (tree.right[rootIndex] > -1) {
+            list.addAll(preOrder(tree.right[rootIndex]));
+        }
+        return list;
     }
 
     List<Integer> postOrder() {
-        List<Integer> result = new ArrayList<>();
-        // Finish the implementation
-        // You may need to add a new recursive method to do that
+        if (tree.key.length == 0) {
+            return Collections.emptyList();
+        }
+        if (tree.key.length == 1) {
+            return Collections.singletonList(tree.key[0]);
+        }
 
-        return result;
+        return postOrder(0);
+    }
+
+    private List<Integer> postOrder(int rootIndex) {
+        List<Integer> list = new LinkedList<>();
+        if (tree.left[rootIndex] > -1) {
+            list.addAll(postOrder(tree.left[rootIndex]));
+        }
+        if (tree.right[rootIndex] > -1) {
+            list.addAll(postOrder(tree.right[rootIndex]));
+        }
+        list.add(tree.key[rootIndex]);
+        return list;
     }
 
     private static class FastScanner {
