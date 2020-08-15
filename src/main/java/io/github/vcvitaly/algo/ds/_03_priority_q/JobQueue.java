@@ -44,7 +44,6 @@ public class JobQueue {
     }
 
     ProcessingEvent[] assignJobsNaive(int numWorkers, Job[] jobs) {
-        // TODO: replace this code with a faster algorithm.
         ProcessingEvent[] processingEvents = new ProcessingEvent[jobs.length];
 
         ThreadInfo[] threads = IntStream.range(0, numWorkers).mapToObj(ThreadInfo::new).toArray(ThreadInfo[]::new);
@@ -85,7 +84,7 @@ public class JobQueue {
 
     public void solve() throws IOException {
         Task task = readData();
-        ProcessingEvent[] processingEvents = assignJobsNaive(task.numWorkers, task.jobs);
+        ProcessingEvent[] processingEvents = assignJobsFast(task.numWorkers, task.jobs);
         writeResponse(processingEvents);
         out.close();
     }
@@ -138,10 +137,15 @@ public class JobQueue {
 
     static class ThreadInfo implements Comparable<ThreadInfo> {
         int threadIndex;
-        int nextFreeTime;
+        long nextFreeTime;
 
-        public ThreadInfo(int threadIndex) {
+        ThreadInfo(int threadIndex) {
             this.threadIndex = threadIndex;
+        }
+
+        ThreadInfo(int threadIndex, int nextFreeTime) {
+            this.threadIndex = threadIndex;
+            this.nextFreeTime = nextFreeTime;
         }
 
         @Override
@@ -168,7 +172,7 @@ public class JobQueue {
 
         @Override
         public int compareTo(ThreadInfo o) {
-            int compareTime = Integer.compare(nextFreeTime, o.nextFreeTime) * -1;
+            int compareTime = Long.compare(nextFreeTime, o.nextFreeTime) * -1;
             return compareTime != 0 ? compareTime : Integer.compare(threadIndex, o.threadIndex) * -1;
         }
     }
@@ -206,21 +210,32 @@ public class JobQueue {
     }
 
     static class  Heap<E extends Comparable<E>> {
+        private static final int INITIAL_SIZE = 2;
+        private static final int NONE = -1;
         private E[] a;
         private int boundaryIndex;
 
         public Heap(E[] a) {
             this.a = a;
             boundaryIndex = a.length - 1;
+            buildHeap();
         }
 
-        private void buildHeap() {
-            for (int i = a.length / 2; i >= 0; i--) {
-                siftDown(i);
-            }
+        @SuppressWarnings("unchecked")
+        public Heap() {
+            a = (E[]) new Comparable[INITIAL_SIZE];
+            boundaryIndex = NONE;
+        }
+
+        public int size() {
+            return boundaryIndex + 1;
         }
 
         E extractMax() {
+            if (boundaryIndex == NONE) {
+                return null;
+            }
+
             E result = a[0];
             a[0] = a[boundaryIndex];
             --boundaryIndex;
@@ -228,20 +243,33 @@ public class JobQueue {
             return result;
         }
 
+        E peekMax() {
+            return a[0];
+        }
+
+        E peekMin() {
+            return a[boundaryIndex];
+        }
+
         void insert(E e) {
-            if (boundaryIndex + 1 == a.length) {
-                throw new ArrayIndexOutOfBoundsException("Internal heap array has reached it maximum capacity, cannot add " + e);
+            if (boundaryIndex == Integer.MAX_VALUE) {
+                throw new ArrayIndexOutOfBoundsException(
+                        String.format("Internal heap array has reached it maximum capacity %d, cannot add %s", Integer.MAX_VALUE, e)
+                );
             }
-            ++boundaryIndex;
-            a[boundaryIndex] = e;
+            if (boundaryIndex + 1 == a.length) {
+                resize();
+            }
+            a[++boundaryIndex] = e;
             siftUp(boundaryIndex);
         }
 
         void siftUp (int i) {
-            int parent;
-            while (i > 0 && a[parent = parent(i)].compareTo(a[i]) < 0) {
+            int parent = parent(i);
+            while (i > 0 && a[i].compareTo(a[parent]) > 0) {
                 swap(parent, i);
                 i = parent;
+                parent = parent(i);
             }
         }
 
@@ -249,6 +277,13 @@ public class JobQueue {
             int maxIndex;
             while (i != (maxIndex = maxIndex(i))) {
                 swap(i, maxIndex);
+                i = maxIndex;
+            }
+        }
+
+        private void buildHeap() {
+            for (int i = a.length / 2; i >= 0; i--) {
+                siftDown(i);
             }
         }
 
@@ -288,6 +323,10 @@ public class JobQueue {
             E tmp = a[i];
             a[i] = a[j];
             a[j] = tmp;
+        }
+
+        private void resize() {
+            a = Arrays.copyOf(a, (int) (a.length * 1.5));
         }
 
         @Override
