@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 public class TrieConstruction {
@@ -30,8 +29,8 @@ public class TrieConstruction {
         }
     }
 
-    List<Map<Character, Integer>> buildTrie(String[] patterns) {
-        List<Map<Character, Integer>> trie = new ArrayList<>();
+    List<Edge> buildTrie(String[] patterns) {
+        List<Edge> trie = new ArrayList<>();
 
         for (String s : patterns) {
             String[] pattern = s.split("");
@@ -46,23 +45,32 @@ public class TrieConstruction {
         new TrieConstruction().run();
     }
 
-    public void print(List<Map<Character, Integer>> trie) {
-        for (int i = 0; i < trie.size(); ++i) {
-            Map<Character, Integer> node = trie.get(i);
-            for (Map.Entry<Character, Integer> entry : node.entrySet()) {
-                System.out.println(i + "->" + entry.getValue() + ":" + entry.getKey());
-            }
+    private void print(List<Edge> trie) {
+        for (Edge edge : trie) {
+            System.out.printf("%d->%d:%s%n", edge.u, edge.v, edge.label);
         }
     }
 
-    public void run() throws IOException {
+    private void run() throws IOException {
         FastScanner scanner = new FastScanner();
         int patternsCount = scanner.nextInt();
         String[] patterns = new String[patternsCount];
         for (int i = 0; i < patternsCount; ++i) {
             patterns[i] = scanner.next();
         }
-        List<Map<Character, Integer>> trie = buildTrie(patterns);
+        List<Edge> trie = buildTrie(patterns);
         print(trie);
+    }
+
+    static class Edge {
+        int u;
+        int v;
+        char label;
+
+        public Edge(int u, int v, char label) {
+            this.u = u;
+            this.v = v;
+            this.label = label;
+        }
     }
 }
