@@ -2,6 +2,7 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 
 import io.github.vcvitaly.algo.Helper;
 import io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Edge;
+import io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Node;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -22,10 +23,11 @@ class TrieConstructionTest {
         System.out.println(Helper.shortToString(param));
 
         // Act
-        List<Edge> edges = trieConstruction.buildTrie(param.patterns);
+        Node trie = trieConstruction.buildTrie(param.patterns);
+        List<Edge> edges = trieConstruction.edges(trie);
 
         // Assert
-        assertThat(edges).isEqualTo(param.edges);
+        assertThat(edges).containsExactlyInAnyOrderElementsOf(param.edges);
     }
 
     static Stream<Param> params() {
@@ -48,7 +50,7 @@ class TrieConstructionTest {
                         )
                 ),
                 Param.of(
-                        new String[]{"ATAGA", "AT", "GAT"},
+                        new String[]{"ATAGA", "ATC", "GAT"},
                         Arrays.asList(
                                 new Edge(0, 1, 'A'),
                                 new Edge(1, 2, 'T'),
