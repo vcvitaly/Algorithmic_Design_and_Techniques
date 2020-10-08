@@ -2,7 +2,6 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 
 import io.github.vcvitaly.algo.Helper;
 import io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Edge;
-import io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Node;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieConstructionTest {
 
-    private TrieConstruction trieConstruction = new TrieConstruction();
+    private TrieConstruction trieConstruction = new TrieConstruction(new PatternTrieBuilder());
 
     @ParameterizedTest
     @MethodSource("params")
@@ -23,7 +22,7 @@ class TrieConstructionTest {
         System.out.println(Helper.shortToString(param));
 
         // Act
-        Node trie = trieConstruction.buildTrie(param.patterns);
+        TrieNode trie = trieConstruction.buildTrie(param.patterns);
         List<Edge> edges = trieConstruction.edges(trie);
 
         // Assert

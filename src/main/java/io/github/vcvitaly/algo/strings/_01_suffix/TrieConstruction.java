@@ -3,7 +3,6 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +10,15 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class TrieConstruction {
-    private static final int ROOT_VALUE = 0;
+
+    private PatternTrieBuilder trieBuilder;
+
+    public TrieConstruction(PatternTrieBuilder trieBuilder) {
+        this.trieBuilder = trieBuilder;
+    }
 
     class FastScanner {
         StringTokenizer tok = new StringTokenizer("");
@@ -36,36 +39,19 @@ public class TrieConstruction {
         }
     }
 
-    Node buildTrie(String[] patterns) {
-        AtomicInteger counter = new AtomicInteger(1);
-        Node root = new Node(ROOT_VALUE);
-
-        for (String pattern : patterns) {
-            Node currentNode = root;
-
-            for (char currentSymbol : pattern.toCharArray()) {
-                if (currentNode.edges.containsKey(currentSymbol)) {
-                    currentNode = currentNode.edges.get(currentSymbol);
-                } else {
-                    Node newNode = new Node(counter.getAndIncrement());
-                    currentNode.edges.put(currentSymbol, newNode);
-                    currentNode = newNode;
-                }
-            }
-        }
-
-        return root;
+    TrieNode buildTrie(String[] patterns) {
+        return trieBuilder.buildTrie(patterns);
     }
 
-    List<Edge> edges(Node trie) {
-        Queue<Node> queue = new LinkedList<>();
+    List<Edge> edges(TrieNode trie) {
+        Queue<TrieNode> queue = new LinkedList<>();
         List<Edge> allEdges = new LinkedList<>();
 
         queue.add(trie);
 
         while (!queue.isEmpty()) {
-            Node node = queue.poll();
-            Set<Map.Entry<Character, Node>> nodeEdges = node.edges.entrySet();
+            TrieNode node = queue.poll();
+            Set<Map.Entry<Character, TrieNode>> nodeEdges = node.edges.entrySet();
             allEdges.addAll(
                     nodeEdges.stream()
                             .map(entry -> toEdge(node.value, entry))
@@ -80,7 +66,7 @@ public class TrieConstruction {
         return allEdges;
     }
 
-    private Edge toEdge(int u, Map.Entry<Character, Node> entry) {
+    private Edge toEdge(int u, Map.Entry<Character, TrieNode> entry) {
         int v = entry.getValue().value;
         Character label = entry.getKey();
         return new Edge(u, v, label);
@@ -99,30 +85,12 @@ public class TrieConstruction {
         for (int i = 0; i < patternsCount; ++i) {
             patterns[i] = scanner.next();
         }
-        Node trie = buildTrie(patterns);
+        TrieNode trie = buildTrie(patterns);
         print(edges(trie));
     }
 
     public static void main(String[] args) throws IOException {
-        new TrieConstruction().run();
-    }
-
-    static class Node {
-        int value;
-        Map<Character, Node> edges;
-
-        public Node(int value) {
-            this.value = value;
-            edges = new LinkedHashMap<>();
-        }
-
-        @Override
-        public String toString() {
-            return "Node{" +
-                    "value=" + value +
-                    ", edges=" + edges +
-                    '}';
-        }
+        new TrieConstruction(new PatternTrieBuilder()).run();
     }
 
     static class Edge {
