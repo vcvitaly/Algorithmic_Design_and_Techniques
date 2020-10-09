@@ -3,30 +3,25 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TrieMatching implements Runnable {
-    int letterToIndex(char letter) {
-        switch (letter) {
-            case 'A':
-                return 0;
-            case 'C':
-                return 1;
-            case 'G':
-                return 2;
-            case 'T':
-                return 3;
-            default:
-                assert (false);
-                return Node.NA;
-        }
-    }
 
     List<Integer> solve(String text, String[] patterns) {
         List<Integer> result = new ArrayList<>();
 
-        // write your code here
+        TrieNode root = new PatternTrieBuilder().buildTrie(patterns);
+
+        char[] chars = text.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            TrieNode currentNode = root;
+            for (int j = i; j < chars.length && currentNode.hasEdge(chars[j]); j++) {
+                currentNode = currentNode.followEdge(chars[j]);
+            }
+            if (currentNode.isALeaf()) {
+                result.add(i);
+            }
+        }
 
         return result;
     }
@@ -38,7 +33,7 @@ public class TrieMatching implements Runnable {
             int n = Integer.parseInt(in.readLine());
             String[] patterns = new String[n];
             for (int i = 0; i < n; i++) {
-                patterns[n]= in.readLine();
+                patterns[i]= in.readLine();
             }
 
             List<Integer> ans = solve(text, patterns);
@@ -54,16 +49,5 @@ public class TrieMatching implements Runnable {
 
     public static void main(String[] args) {
         new Thread(new TrieMatching()).start();
-    }
-
-    static class Node {
-        public static final int LETTERS = 4;
-        public static final int NA = -1;
-        public int[] next;
-
-        Node() {
-            next = new int[LETTERS];
-            Arrays.fill(next, NA);
-        }
     }
 }

@@ -17,7 +17,7 @@ class TrieMatchingTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void constructsATrie(Param param) {
+    void findsPatterns(Param param) {
         System.out.println(Helper.shortToString(param));
 
         // Act & Assert
