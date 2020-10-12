@@ -18,17 +18,36 @@ public class TrieMatchingExtended implements Runnable {
         TrieNode root = buildTrie(patterns);
 
         char[] chars = text.toCharArray();
+        // One other option is to remove the first symbol every time instead of introducing another index
         for (int i = 0; i < chars.length; i++) {
             TrieNode currentNode = root;
             for (int j = i; j < chars.length && currentNode.hasEdge(chars[j]); j++) {
                 currentNode = currentNode.followEdge(chars[j]);
-            }
-            if (currentNode.isALeaf()) {
-                result.add(i);
+                if (endsPattern(currentNode)) {
+                    result.add(i);
+                }
             }
         }
 
         return new ArrayList<>(result);
+    }
+
+    List<Integer> solveNaive(String text, String[] patterns) {
+        Set<Integer> result = new LinkedHashSet<>();
+
+        for (int i = 0; i < text.length(); i++) {
+            for (String pattern : patterns) {
+                if (text.startsWith(pattern, i)) {
+                    result.add(i);
+                }
+            }
+        }
+
+        return new ArrayList<>(result);
+    }
+
+    private boolean endsPattern(TrieNode node) {
+        return node.edges.containsKey(TERMINAL_SIGN);
     }
 
     TrieNode buildTrie(String[] patterns) {
@@ -53,6 +72,7 @@ public class TrieMatchingExtended implements Runnable {
         return root;
     }
 
+    @Override
     public void run() {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
