@@ -2,6 +2,8 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 
 import io.github.vcvitaly.algo.Helper;
 import io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Edge;
+import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieBuilder;
+import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;

@@ -1,4 +1,4 @@
-package io.github.vcvitaly.algo.strings._01_suffix;
+package io.github.vcvitaly.algo.strings._01_suffix.common;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -6,8 +6,8 @@ import java.util.Map;
 public class TrieNode {
     public static final int ROOT_VALUE = 0;
 
-    int value;
-    Map<Character, TrieNode> edges;
+    public int value;
+    public Map<Character, TrieNode> edges;
 
     public TrieNode() {
         this(ROOT_VALUE);

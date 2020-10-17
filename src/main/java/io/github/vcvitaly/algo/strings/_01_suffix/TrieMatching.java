@@ -1,5 +1,7 @@
 package io.github.vcvitaly.algo.strings._01_suffix;
 
+import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieBuilder;
+import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;

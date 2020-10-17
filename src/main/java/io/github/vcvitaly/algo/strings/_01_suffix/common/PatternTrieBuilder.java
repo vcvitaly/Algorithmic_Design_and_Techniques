@@ -1,10 +1,10 @@
-package io.github.vcvitaly.algo.strings._01_suffix;
+package io.github.vcvitaly.algo.strings._01_suffix.common;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PatternTrieBuilder {
 
-    TrieNode buildTrie(String[] patterns) {
+    public TrieNode buildTrie(String[] patterns) {
         AtomicInteger counter = new AtomicInteger(1);
         TrieNode root = new TrieNode();
 
