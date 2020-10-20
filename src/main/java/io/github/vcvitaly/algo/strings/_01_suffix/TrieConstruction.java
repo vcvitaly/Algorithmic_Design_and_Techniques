@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 public class TrieConstruction {
 
-    private PatternTrieBuilder trieBuilder;
+    private final PatternTrieBuilder trieBuilder;
 
     public TrieConstruction(PatternTrieBuilder trieBuilder) {
         this.trieBuilder = trieBuilder;
     }
 
-    class FastScanner {
+    static class FastScanner {
         StringTokenizer tok = new StringTokenizer("");
         BufferedReader in;
 
@@ -41,19 +41,19 @@ public class TrieConstruction {
         }
     }
 
-    TrieNode buildTrie(String[] patterns) {
+    TrieNode<Character> buildTrie(String[] patterns) {
         return trieBuilder.buildTrie(patterns);
     }
 
-    List<Edge> edges(TrieNode trie) {
-        Queue<TrieNode> queue = new LinkedList<>();
+    List<Edge> edges(TrieNode<Character> trie) {
+        Queue<TrieNode<Character>> queue = new LinkedList<>();
         List<Edge> allEdges = new LinkedList<>();
 
         queue.add(trie);
 
         while (!queue.isEmpty()) {
-            TrieNode node = queue.poll();
-            Set<Map.Entry<Character, TrieNode>> nodeEdges = node.edges.entrySet();
+            TrieNode<Character> node = queue.poll();
+            Set<Map.Entry<Character, TrieNode<Character>>> nodeEdges = node.edges.entrySet();
             allEdges.addAll(
                     nodeEdges.stream()
                             .map(entry -> toEdge(node.value, entry))
@@ -68,7 +68,7 @@ public class TrieConstruction {
         return allEdges;
     }
 
-    private Edge toEdge(int u, Map.Entry<Character, TrieNode> entry) {
+    private Edge toEdge(int u, Map.Entry<Character, TrieNode<Character>> entry) {
         int v = entry.getValue().value;
         Character label = entry.getKey();
         return new Edge(u, v, label);
@@ -87,7 +87,7 @@ public class TrieConstruction {
         for (int i = 0; i < patternsCount; ++i) {
             patterns[i] = scanner.next();
         }
-        TrieNode trie = buildTrie(patterns);
+        TrieNode<Character> trie = buildTrie(patterns);
         print(edges(trie));
     }
 

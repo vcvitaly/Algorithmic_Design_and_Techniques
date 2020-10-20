@@ -3,11 +3,11 @@ package io.github.vcvitaly.algo.strings._01_suffix.common;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TrieNode {
+public class TrieNode<T> {
     public static final int ROOT_VALUE = 0;
 
     public int value;
-    public Map<Character, TrieNode> edges;
+    public Map<T, TrieNode<T>> edges;
 
     public TrieNode() {
         this(ROOT_VALUE);
@@ -18,7 +18,7 @@ public class TrieNode {
         edges = new LinkedHashMap<>();
     }
 
-    public boolean hasEdge(char label) {
+    public boolean hasEdge(T label) {
         return edges.containsKey(label);
     }
 
@@ -26,7 +26,7 @@ public class TrieNode {
         return value != ROOT_VALUE && edges.isEmpty();
     }
 
-    public TrieNode followEdge(char label) {
+    public TrieNode<T> followEdge(T label) {
         return edges.get(label);
     }
 

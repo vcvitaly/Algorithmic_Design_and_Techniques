@@ -12,11 +12,11 @@ public class TrieMatching implements Runnable {
     List<Integer> solve(String text, String[] patterns) {
         List<Integer> result = new ArrayList<>();
 
-        TrieNode root = new PatternTrieBuilder().buildTrie(patterns);
+        TrieNode<Character> root = new PatternTrieBuilder().buildTrie(patterns);
 
         char[] chars = text.toCharArray();
         for (int i = 0; i < chars.length; i++) {
-            TrieNode currentNode = root;
+            TrieNode<Character> currentNode = root;
             for (int j = i; j < chars.length && currentNode.hasEdge(chars[j]); j++) {
                 currentNode = currentNode.followEdge(chars[j]);
             }

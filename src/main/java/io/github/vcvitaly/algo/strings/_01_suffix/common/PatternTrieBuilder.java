@@ -4,18 +4,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PatternTrieBuilder {
 
-    public TrieNode buildTrie(String[] patterns) {
+    public TrieNode<Character> buildTrie(String[] patterns) {
         AtomicInteger counter = new AtomicInteger(1);
-        TrieNode root = new TrieNode();
+        TrieNode<Character> root = new TrieNode<>();
 
         for (String pattern : patterns) {
-            TrieNode currentNode = root;
+            TrieNode<Character> currentNode = root;
 
             for (char currentSymbol : pattern.toCharArray()) {
                 if (currentNode.edges.containsKey(currentSymbol)) {
                     currentNode = currentNode.edges.get(currentSymbol);
                 } else {
-                    TrieNode newNode = new TrieNode(counter.getAndIncrement());
+                    TrieNode<Character> newNode = new TrieNode<>(counter.getAndIncrement());
                     currentNode.edges.put(currentSymbol, newNode);
                     currentNode = newNode;
                 }

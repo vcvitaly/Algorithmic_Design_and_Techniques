@@ -16,12 +16,12 @@ public class TrieMatchingExtended implements Runnable {
     List<Integer> solve(String text, String[] patterns) {
         Set<Integer> result = new LinkedHashSet<>();
 
-        TrieNode root = buildTrie(patterns);
+        TrieNode<Character> root = buildTrie(patterns);
 
         char[] chars = text.toCharArray();
         // One other option is to remove the first symbol every time instead of introducing another index
         for (int i = 0; i < chars.length; i++) {
-            TrieNode currentNode = root;
+            TrieNode<Character> currentNode = root;
             for (int j = i; j < chars.length && currentNode.hasEdge(chars[j]); j++) {
                 currentNode = currentNode.followEdge(chars[j]);
                 if (endsPattern(currentNode)) {
@@ -47,27 +47,27 @@ public class TrieMatchingExtended implements Runnable {
         return new ArrayList<>(result);
     }
 
-    private boolean endsPattern(TrieNode node) {
+    private boolean endsPattern(TrieNode<Character> node) {
         return node.edges.containsKey(TERMINAL_SIGN);
     }
 
-    TrieNode buildTrie(String[] patterns) {
+    TrieNode<Character> buildTrie(String[] patterns) {
         AtomicInteger counter = new AtomicInteger(1);
-        TrieNode root = new TrieNode();
+        TrieNode<Character> root = new TrieNode<Character>();
 
         for (String pattern : patterns) {
-            TrieNode currentNode = root;
+            TrieNode<Character> currentNode = root;
 
             for (char currentSymbol : pattern.toCharArray()) {
                 if (currentNode.edges.containsKey(currentSymbol)) {
                     currentNode = currentNode.edges.get(currentSymbol);
                 } else {
-                    TrieNode newNode = new TrieNode(counter.getAndIncrement());
+                    TrieNode<Character> newNode = new TrieNode<Character>(counter.getAndIncrement());
                     currentNode.edges.put(currentSymbol, newNode);
                     currentNode = newNode;
                 }
             }
-            currentNode.edges.put(TERMINAL_SIGN, new TrieNode(counter.getAndIncrement()));
+            currentNode.edges.put(TERMINAL_SIGN, new TrieNode<Character>(counter.getAndIncrement()));
         }
 
         return root;
