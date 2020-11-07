@@ -1,6 +1,6 @@
 package io.github.vcvitaly.algo.strings._01_suffix;
 
-import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieBuilder;
+import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieCommon;
 import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,7 +12,7 @@ public class TrieMatching implements Runnable {
     List<Integer> solve(String text, String[] patterns) {
         List<Integer> result = new ArrayList<>();
 
-        TrieNode<Character> root = new PatternTrieBuilder().buildTrie(patterns);
+        TrieNode<Character> root = new PatternTrieCommon().buildTrie(patterns);
 
         char[] chars = text.toCharArray();
         for (int i = 0; i < chars.length; i++) {

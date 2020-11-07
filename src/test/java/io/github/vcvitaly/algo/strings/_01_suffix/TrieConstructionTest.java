@@ -2,7 +2,7 @@ package io.github.vcvitaly.algo.strings._01_suffix;
 
 import io.github.vcvitaly.algo.Helper;
 import io.github.vcvitaly.algo.strings._01_suffix.common.Edge;
-import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieBuilder;
+import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieCommon;
 import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieConstructionTest {
 
-    private TrieConstruction trieConstruction = new TrieConstruction(new PatternTrieBuilder());
+    private TrieConstruction trieConstruction = new TrieConstruction(new PatternTrieCommon());
 
     @ParameterizedTest
     @MethodSource("params")
