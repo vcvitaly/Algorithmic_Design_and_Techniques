@@ -1,5 +1,6 @@
 package io.github.vcvitaly.algo.strings._01_suffix;
 
+import io.github.vcvitaly.algo.strings._01_suffix.common.Edge;
 import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieBuilder;
 import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.io.BufferedReader;
@@ -8,7 +9,6 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -93,41 +93,5 @@ public class TrieConstruction {
 
     public static void main(String[] args) throws IOException {
         new TrieConstruction(new PatternTrieBuilder()).run();
-    }
-
-    static class Edge {
-        int u;
-        int v;
-        char label;
-
-        public Edge(int u, int v, char label) {
-            this.u = u;
-            this.v = v;
-            this.label = label;
-        }
-
-        @Override
-        public String toString() {
-            return "Edge{" +
-                    "u=" + u +
-                    ", v=" + v +
-                    ", label=" + label +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Edge edge = (Edge) o;
-            return u == edge.u &&
-                    v == edge.v &&
-                    label == edge.label;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(u, v, label);
-        }
     }
 }

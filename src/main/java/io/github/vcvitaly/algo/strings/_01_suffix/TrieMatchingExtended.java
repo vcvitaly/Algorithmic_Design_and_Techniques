@@ -53,7 +53,7 @@ public class TrieMatchingExtended implements Runnable {
 
     TrieNode<Character> buildTrie(String[] patterns) {
         AtomicInteger counter = new AtomicInteger(1);
-        TrieNode<Character> root = new TrieNode<Character>();
+        TrieNode<Character> root = new TrieNode<>();
 
         for (String pattern : patterns) {
             TrieNode<Character> currentNode = root;
@@ -62,12 +62,12 @@ public class TrieMatchingExtended implements Runnable {
                 if (currentNode.edges.containsKey(currentSymbol)) {
                     currentNode = currentNode.edges.get(currentSymbol);
                 } else {
-                    TrieNode<Character> newNode = new TrieNode<Character>(counter.getAndIncrement());
+                    TrieNode<Character> newNode = new TrieNode<>(counter.getAndIncrement());
                     currentNode.edges.put(currentSymbol, newNode);
                     currentNode = newNode;
                 }
             }
-            currentNode.edges.put(TERMINAL_SIGN, new TrieNode<Character>(counter.getAndIncrement()));
+            currentNode.edges.put(TERMINAL_SIGN, new TrieNode<>(counter.getAndIncrement()));
         }
 
         return root;
