@@ -3,9 +3,12 @@ package io.github.vcvitaly.algo.ds._04_binary_trees;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -14,19 +17,53 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TreeOrdersTest {
 
+    private TreeOrders treeOrders = new TreeOrders();
+
     @ParameterizedTest
     @MethodSource("params")
-    void performsTraversalCorrectly(Param param) {
+    void performsInOrderTraversalCorrectly(Param param) {
         System.out.println(param);
 
-        TreeOrders treeOrders = new TreeOrders(new Tree(param.key, param.left, param.right));
+        Tree tree = new Tree(param.key, param.left, param.right);
 
-        assertThat(treeOrders.inOrder())
+        assertThat(treeOrders.inOrder(tree))
                 .isEqualTo(param.inOrderList);
-        assertThat(treeOrders.preOrder())
+    }
+
+    @ParameterizedTest
+    @MethodSource("params")
+    void performsPreOrderTraversalCorrectly(Param param) {
+        System.out.println(param);
+
+        Tree tree = new Tree(param.key, param.left, param.right);
+
+        assertThat(treeOrders.preOrder(tree))
                 .isEqualTo(param.preOrderList);
-        assertThat(treeOrders.postOrder())
+    }
+
+    @ParameterizedTest
+    @MethodSource("params")
+    void performsPostOrderTraversalCorrectly(Param param) {
+        System.out.println(param);
+
+        Tree tree = new Tree(param.key, param.left, param.right);
+
+        assertThat(treeOrders.postOrder(tree))
                 .isEqualTo(param.postOrderList);
+    }
+
+    @Test
+    void stressTest() {
+        int n = 100_000;
+        int[] key = IntStream.range(0, n).toArray();
+        int[] left = IntStream.range(0, n).map(i -> -1).toArray();
+        int[] right = IntStream.concat(IntStream.range(1, n), IntStream.of(-1)).toArray();
+
+        List<Integer> inOrder = IntStream.range(0, n).boxed().collect(Collectors.toList());
+
+        assertThat(
+                treeOrders.inOrder(new Tree(key, left, right))
+        ).isEqualTo(inOrder);
     }
 
     static Stream<Param> params() {

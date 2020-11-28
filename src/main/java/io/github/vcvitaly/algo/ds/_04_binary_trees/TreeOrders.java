@@ -6,14 +6,12 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class TreeOrders {
-    Tree tree;
-
-    public TreeOrders(Tree tree) {
-        this.tree = tree;
-    }
+    private static final int ROOT_INDEX = 0;
+    private static final int NONE = -1;
 
     private static Tree read() throws IOException {
         FastScanner in = new FastScanner();
@@ -29,7 +27,7 @@ public class TreeOrders {
         return new Tree(key, left, right);
     }
 
-    List<Integer> inOrder() {
+    List<Integer> inOrder(Tree tree) {
         if (tree.key.length == 0) {
             return Collections.emptyList();
         }
@@ -37,22 +35,32 @@ public class TreeOrders {
             return Collections.singletonList(tree.key[0]);
         }
 
-        return inOrder(0);
-    }
-
-    private List<Integer> inOrder(int rootIndex) {
+        boolean[] visited = new boolean[tree.key.length];
         List<Integer> list = new LinkedList<>();
-        if (tree.left[rootIndex] > -1) {
-            list.addAll(inOrder(tree.left[rootIndex]));
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(ROOT_INDEX);
+
+        while (!stack.isEmpty()) {
+            int node = stack.peek();
+            if (visited[node]) {
+                stack.pop();
+                if (tree.right[node] != NONE) {
+                    stack.push(tree.right[node]);
+                }
+                list.add(tree.key[node]);
+            } else {
+                if (tree.left[node] != NONE) {
+                    stack.push(tree.left[node]);
+                }
+                visited[node] = true;
+            }
         }
-        list.add(tree.key[rootIndex]);
-        if (tree.right[rootIndex] > -1) {
-            list.addAll(inOrder(tree.right[rootIndex]));
-        }
+
         return list;
     }
 
-    List<Integer> preOrder() {
+    List<Integer> preOrder(Tree tree) {
         if (tree.key.length == 0) {
             return Collections.emptyList();
         }
@@ -60,41 +68,55 @@ public class TreeOrders {
             return Collections.singletonList(tree.key[0]);
         }
 
-        return preOrder(0);
-    }
-
-    private List<Integer> preOrder(int rootIndex) {
         List<Integer> list = new LinkedList<>();
-        list.add(tree.key[rootIndex]);
-        if (tree.left[rootIndex] > -1) {
-            list.addAll(preOrder(tree.left[rootIndex]));
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(ROOT_INDEX);
+
+        while (!stack.isEmpty()) {
+            int node = stack.pop();
+            list.add(tree.key[node]);
+            if (tree.right[node] != NONE) {
+                stack.push(tree.right[node]);
+            }
+            if (tree.left[node] != NONE) {
+                stack.push(tree.left[node]);
+            }
         }
-        if (tree.right[rootIndex] > -1) {
-            list.addAll(preOrder(tree.right[rootIndex]));
-        }
+
         return list;
     }
 
-    List<Integer> postOrder() {
+    List<Integer> postOrder(Tree tree) {
         if (tree.key.length == 0) {
             return Collections.emptyList();
         }
         if (tree.key.length == 1) {
             return Collections.singletonList(tree.key[0]);
         }
-
-        return postOrder(0);
-    }
-
-    private List<Integer> postOrder(int rootIndex) {
+        
+        boolean[] visited = new boolean[tree.key.length];
         List<Integer> list = new LinkedList<>();
-        if (tree.left[rootIndex] > -1) {
-            list.addAll(postOrder(tree.left[rootIndex]));
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(ROOT_INDEX);
+
+        while (!stack.isEmpty()) {
+            int node = stack.peek();
+            if (visited[node]) {
+                stack.pop();
+                list.add(tree.key[node]);
+            } else {
+                if (tree.right[node] != NONE) {
+                    stack.push(tree.right[node]);
+                }
+                if (tree.left[node] != NONE) {
+                    stack.push(tree.left[node]);
+                }
+                visited[node] = true;
+            }
         }
-        if (tree.right[rootIndex] > -1) {
-            list.addAll(postOrder(tree.right[rootIndex]));
-        }
-        list.add(tree.key[rootIndex]);
+
         return list;
     }
 
@@ -128,10 +150,11 @@ public class TreeOrders {
     }
 
     public static void main(String[] args) throws IOException {
-        TreeOrders tree = new TreeOrders(read());
-        printList(tree.inOrder());
-        printList(tree.preOrder());
-        printList(tree.postOrder());
+        Tree tree = read();
+        TreeOrders treeOrders = new TreeOrders();
+        printList(treeOrders.inOrder(tree));
+        printList(treeOrders.preOrder(tree));
+        printList(treeOrders.postOrder(tree));
     }
 
     private static void printList(List<Integer> x) {
