@@ -26,12 +26,18 @@ class IsCorrectBstTest {
     static Stream<Param> params() {
         return Stream.of(
                 Param.of(
-                        new Node[] {new Node(2, 1, 2), new Node(1, -1, -1), new Node(3, -1, -1)},
-                        true
+                        new Node[] {
+                                new Node(2, 1, 2),
+                                new Node(1, -1, -1),
+                                new Node(3, -1, -1)
+                        }, true
                 ),
                 Param.of(
-                        new Node[] {new Node(1, 1, 2), new Node(2, -1, -1), new Node(3, -1, -1)},
-                        false
+                        new Node[] {
+                                new Node(1, 1, 2),
+                                new Node(2, -1, -1),
+                                new Node(3, -1, -1)
+                        }, false
                 ),
                 Param.of(new Node[] {}, true),
                 Param.of(
@@ -41,7 +47,8 @@ class IsCorrectBstTest {
                                 new Node(3, -1, 3),
                                 new Node(4, -1, 4),
                                 new Node(5, -1, -1)
-                        }, true),
+                        }, true
+                ),
                 Param.of(
                         new Node[] {
                                 new Node(4, 1, 2),
@@ -51,14 +58,16 @@ class IsCorrectBstTest {
                                 new Node(3, -1, -1),
                                 new Node(5, -1, -1),
                                 new Node(7, -1, -1)
-                        }, true),
+                        }, true
+                ),
                 Param.of(
                         new Node[]{
                                 new Node(4, 1, -1),
                                 new Node(2, 2, 3),
                                 new Node(1, -1, -1),
                                 new Node(5, -1, -1)
-                        }, false)
+                        }, false
+                )
         );
     }
 

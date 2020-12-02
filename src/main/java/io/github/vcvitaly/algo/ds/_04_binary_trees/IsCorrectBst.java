@@ -56,13 +56,15 @@ public class IsCorrectBst {
             if (node.left > -1) {
                 int left = subtreeMaxVal(node.left);
                 if (left >= node.key) {
-                    throw new IllegalStateException(String.format("Left key %d is >= than the node %d", left, node.key));
+                    throw new IllegalStateException(String.format("Max value in the left subtree %d is >= than the node %d", left,
+                            node.key));
                 }
             }
             if (node.right > -1) {
                 int right = subtreeMaxVal(node.right);
                 if (right <= node.key) {
-                    throw new IllegalStateException(String.format("Right key %d is <= than the node %d", right, node.key));
+                    throw new IllegalStateException(String.format("Max value in the right subtree %d is <= than the node %d", right,
+                            node.key));
                 }
                 max = right;
             }
@@ -79,8 +81,8 @@ public class IsCorrectBst {
 
         static class Node {
             int key;
-            int left;
-            int right;
+            int left; // left child index
+            int right; // right child index
 
             public Node(int key, int left, int right) {
                 this.key = key;
