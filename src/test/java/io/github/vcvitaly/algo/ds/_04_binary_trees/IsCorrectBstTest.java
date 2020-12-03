@@ -25,6 +25,8 @@ class IsCorrectBstTest {
 
     static Stream<Param> params() {
         return Stream.of(
+                Param.of(new Node[] {}, true),
+                Param.of(new Node[] {new Node(0, -1, -1)}, true),
                 Param.of(
                         new Node[] {
                                 new Node(2, 1, 2),
@@ -39,7 +41,6 @@ class IsCorrectBstTest {
                                 new Node(3, -1, -1)
                         }, false
                 ),
-                Param.of(new Node[] {}, true),
                 Param.of(
                         new Node[]{
                                 new Node(1, -1, 1),
