@@ -1,7 +1,6 @@
 package io.github.vcvitaly.algo.ds._04_binary_trees;
 
 import io.github.vcvitaly.algo.Helper;
-import io.github.vcvitaly.algo.ds._04_binary_trees.IsCorrectBst.BinaryTree.Node;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,56 +17,43 @@ class IsCorrectBstTest {
     void verifiesBstCorrectness(Param param) {
         System.out.println(Helper.shortToString(param));
 
-        assertThat(new IsCorrectBst.BinaryTree(param.nodes).isBinarySearchTree())
+        assertThat(new IsCorrectBst.BinaryTree(param.key, param.left, param.right).isCorrectBst())
                 .isEqualTo(param.isCorrectBst);
     }
 
 
     static Stream<Param> params() {
         return Stream.of(
-                Param.of(new Node[] {}, true),
-                Param.of(new Node[] {new Node(0, -1, -1)}, true),
+                Param.of(new int[] {}, new int[] {}, new int[] {}, true),
                 Param.of(
-                        new Node[] {
-                                new Node(2, 1, 2),
-                                new Node(1, -1, -1),
-                                new Node(3, -1, -1)
-                        }, true
+                        new int[] {2, 1, 3},
+                        new int[] {1, -1, -1},
+                        new int[] {2, -1, -1},
+                        true
                 ),
                 Param.of(
-                        new Node[] {
-                                new Node(1, 1, 2),
-                                new Node(2, -1, -1),
-                                new Node(3, -1, -1)
-                        }, false
+                        new int[] {1, 2, 3},
+                        new int[] {1, -1, -1},
+                        new int[] {2, -1, -1},
+                        false
                 ),
                 Param.of(
-                        new Node[]{
-                                new Node(1, -1, 1),
-                                new Node(2, -1, 2),
-                                new Node(3, -1, 3),
-                                new Node(4, -1, 4),
-                                new Node(5, -1, -1)
-                        }, true
+                        new int[] {1, 2, 3, 4, 5},
+                        new int[] {-1, -1, -1, -1, -1},
+                        new int[] {1, 2, 3, 4, -1},
+                        true
                 ),
                 Param.of(
-                        new Node[] {
-                                new Node(4, 1, 2),
-                                new Node(2, 3, 4),
-                                new Node(6, 5, 6),
-                                new Node(1, -1, -1),
-                                new Node(3, -1, -1),
-                                new Node(5, -1, -1),
-                                new Node(7, -1, -1)
-                        }, true
+                        new int[] {4, 2, 6, 1, 3, 5, 7},
+                        new int[] {1, 3, 5, -1, -1, -1, -1},
+                        new int[] {2, 4, 6, -1, -1, -1, -1},
+                        true
                 ),
                 Param.of(
-                        new Node[]{
-                                new Node(4, 1, -1),
-                                new Node(2, 2, 3),
-                                new Node(1, -1, -1),
-                                new Node(5, -1, -1)
-                        }, false
+                        new int[] {4, 2, 1, 5},
+                        new int[] {1, 2, -1, -1},
+                        new int[] {-1, 3, -1, -1},
+                        false
                 )
         );
     }
@@ -75,7 +61,9 @@ class IsCorrectBstTest {
     @Data
     @AllArgsConstructor(staticName = "of")
     private static class Param {
-        private Node[] nodes;
+        private int[] key;
+        private int[] left;
+        private int[] right;
         private boolean isCorrectBst;
     }
 }

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class IsCorrectBst {
@@ -30,74 +31,86 @@ public class IsCorrectBst {
     }
 
     static class BinaryTree {
-        private Node[] nodes;
+        private static final int ROOT_INDEX = 0;
+        private static final int NULL = -1;
+        private int[] key, left, right;
 
-        public BinaryTree(Node[] nodes) {
-            this.nodes = nodes;
+        public BinaryTree(int[] key, int[] left, int[] right) {
+            this.key = key;
+            this.left = left;
+            this.right = right;
         }
 
-        boolean isBinarySearchTree() {
-            if (nodes.length <= 1) {
+        boolean isCorrectBst() {
+            if (key.length <= 1) {
                 return true;
             }
 
-            try {
-                subtreeMaxVal(0);
-                return true;
-            } catch (IllegalStateException e) {
-                return false;
+            boolean[] visited = new boolean[key.length];
+
+            int[] max = new int[key.length];
+            for (int i = 0; i < max.length; i++) {
+                max[i] = Integer.MIN_VALUE;
             }
-        }
 
-        private int subtreeMaxVal(int i) {
-            Node node = nodes[i];
-            int max = node.key;
+            int[] min = new int[key.length];
+            for (int i = 0; i < min.length; i++) {
+                min[i] = Integer.MAX_VALUE;
+            }
 
-            if (node.left > -1) {
-                int left = subtreeMaxVal(node.left);
-                if (left >= node.key) {
-                    throw new IllegalStateException(String.format("Max value in the left subtree %d is >= than the node %d", left,
-                            node.key));
+            Stack<Integer> stack = new Stack<>();
+            stack.push(ROOT_INDEX);
+
+            while (!stack.isEmpty()) {
+                int node = stack.peek();
+                if (visited[node]) {
+                    if (left[node] != NULL) {
+                        if (max[left[node]] < key[node]) {
+                            min[node] = min[left[node]];
+                        } else {
+                            return false;
+                        }
+                    }
+                    if (right[node] != NULL) {
+                        if (min[right[node]] > key[node]) {
+                            max[node] = max[right[node]];
+                        } else {
+                            return false;
+                        }
+                    }
+                    stack.pop();
+                } else {
+                    if (right[node] != NULL) {
+                        if (key[right[node]] > key[node]) {
+                            stack.push(right[node]);
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        max[node] = key[node];
+                    }
+                    if (left[node] != NULL) {
+                        if (key[left[node]] < key[node]) {
+                            stack.push(left[node]);
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        min[node] = key[node];
+                    }
+                    visited[node] = true;
                 }
             }
-            if (node.right > -1) {
-                int right = subtreeMaxVal(node.right);
-                if (right <= node.key) {
-                    throw new IllegalStateException(String.format("Max value in the right subtree %d is <= than the node %d", right,
-                            node.key));
-                }
-                max = right;
-            }
-
-            return max;
+            return true;
         }
 
         @Override
         public String toString() {
             return "BinaryTree{" +
-                    "nodes=" + Arrays.toString(nodes) +
+                    "key=" + Arrays.toString(key) +
+                    ", left=" + Arrays.toString(left) +
+                    ", right=" + Arrays.toString(right) +
                     '}';
-        }
-
-        static class Node {
-            int key;
-            int left; // left child index
-            int right; // right child index
-
-            public Node(int key, int left, int right) {
-                this.key = key;
-                this.left = left;
-                this.right = right;
-            }
-
-            @Override
-            public String toString() {
-                return "Node{" +
-                        "key=" + key +
-                        ", left=" + left +
-                        ", right=" + right +
-                        '}';
-            }
         }
     }
 
@@ -105,24 +118,28 @@ public class IsCorrectBst {
         new Thread(null, () -> run(), "1", 1 << 26).start();
     }
 
-    private static BinaryTree.Node[] read() {
+    private static BinaryTree read() {
         try {
             FastScanner in = new FastScanner();
             int n = in.nextInt();
-            BinaryTree.Node[] nodes = new BinaryTree.Node[n];
+            int[] key = new int[n];
+            int[] left = new int[n];
+            int[] right = new int[n];
             for (int i = 0; i < n; i++) {
-                nodes[i] = new BinaryTree.Node(in.nextInt(), in.nextInt(), in.nextInt());
+                key[i] = in.nextInt();
+                left[i] = in.nextInt();
+                right[i] = in.nextInt();
             }
 
-            return nodes;
+            return new BinaryTree(key, left, right);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static void run() {
-        BinaryTree tree = new BinaryTree(read());
-        if (tree.isBinarySearchTree()) {
+        BinaryTree tree = read();
+        if (tree.isCorrectBst()) {
             System.out.println(CORRECT);
         } else {
             System.out.println(INCORRECT);
