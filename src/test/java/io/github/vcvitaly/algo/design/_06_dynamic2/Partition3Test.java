@@ -12,7 +12,7 @@ class Partition3Test {
 
     @ParameterizedTest
     @MethodSource("params")
-    void findsEditDistance(Param param) {
+    void checksIfCanBePartitionedIntoThreeParts(Param param) {
         System.out.println(param);
 
         assertThat(
