@@ -12,10 +12,10 @@ class KnapsackTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void findsEditDistance(Param param) {
+    void findsOptimalKnapsackFill(Param param) {
         System.out.println(param);
 
-        assertThat(Knapsack.optimalWeightNaive(param.maxWeight, param.barWeights)).isEqualTo(param.maxWeightThatFits);
+        assertThat(Knapsack.optimalWeight(param.barWeights, param.maxWeight)).isEqualTo(param.maxWeightThatFits);
     }
 
     static Stream<Param> params() {

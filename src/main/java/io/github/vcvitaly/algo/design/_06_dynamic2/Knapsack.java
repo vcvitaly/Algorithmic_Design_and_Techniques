@@ -5,25 +5,21 @@ import java.util.Scanner;
 // Maximum Amount of Gold
 
 public class Knapsack {
-    static int optimalWeightNaive(int W, int[] w) {
-        int result = 0;
-        for (int i = 0; i < w.length; i++) {
-            if (result + w[i] <= W) {
-                result += w[i];
-            }
-        }
-        return result;
-    }
 
-    static int optimalWeight(int W, int[] w) {
-        //write you code here
-        int result = 0;
-        for (int i = 0; i < w.length; i++) {
-            if (result + w[i] <= W) {
-                result += w[i];
+    static int optimalWeight(int[] w, int W) {
+        // I use w-1 because w is 0-indexed while m has a top row and a leftmost column both filled with 0 so i and j start at 1
+        int[][] m = new int[w.length + 1][W + 1];
+        for (int i = 1; i <= w.length; i++) {
+            for (int j = 1; j <= W; j++) {
+                if (w[i-1] > j) {
+                    m[i][j] = m[i-1][j];
+                } else {
+                    m[i][j] = Math.max(m[i-1][j-w[i-1]] + w[i-1], m[i-1][j]);
+                }
             }
         }
-        return result;
+
+        return m[w.length][W];
     }
 
     public static void main(String[] args) {
@@ -35,6 +31,6 @@ public class Knapsack {
         for (int i = 0; i < n; i++) {
             w[i] = scanner.nextInt();
         }
-        System.out.println(optimalWeightNaive(W, w));
+        System.out.println(optimalWeight(w, W));
     }
 }
