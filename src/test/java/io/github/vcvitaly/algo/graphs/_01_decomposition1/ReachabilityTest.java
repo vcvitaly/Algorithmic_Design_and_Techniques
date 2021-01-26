@@ -19,7 +19,7 @@ class ReachabilityTest {
 
         assertThat(
                 Reachability.reach(
-                        toAdj(param.countOfVerticesN, param.edges), param.x, param.y
+                        toAdj(param.countOfVerticesN, param.edges), --param.x, --param.y
                 )
         ).isEqualTo(param.hasPathFromXtoY);
     }

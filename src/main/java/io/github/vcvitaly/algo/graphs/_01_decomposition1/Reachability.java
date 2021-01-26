@@ -3,13 +3,29 @@ package io.github.vcvitaly.algo.graphs._01_decomposition1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Reachability {
     static final int NO = 0;
     static final int YES = 1;
 
     static int reach(List<Integer>[] adj, int x, int y) {
-        //write your code here
+        Stack<Integer> stack = new Stack<>();
+        stack.add(x);
+
+        boolean[] visited = new boolean[adj.length];
+
+        while (!stack.isEmpty()) {
+            int node = stack.pop();
+            if (node == y) {
+                return YES;
+            }
+            if (!visited[node]) {
+                stack.addAll(adj[node]);
+                visited[node] = true;
+            }
+        }
+
         return NO;
     }
 
