@@ -3,11 +3,35 @@ package io.github.vcvitaly.algo.graphs._01_decomposition1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class ConnectedComponents {
     static int numberOfComponents(List<Integer>[] adj) {
+        if (adj.length <= 1) {
+            return adj.length;
+        }
+
         int result = 0;
-        //write your code here
+
+        boolean[] visited = new boolean[adj.length];
+
+        for (int i = 0; i < adj.length; i++) {
+            if (!visited[i]) {
+                Stack<Integer> stack = new Stack<>();
+                stack.add(i);
+
+                while (!stack.isEmpty()) {
+                    int node = stack.pop();
+                    if (!visited[node]) {
+                        stack.addAll(adj[node]);
+                        visited[node] = true;
+                    }
+                }
+
+                result++;
+            }
+        }
+
         return result;
     }
 
