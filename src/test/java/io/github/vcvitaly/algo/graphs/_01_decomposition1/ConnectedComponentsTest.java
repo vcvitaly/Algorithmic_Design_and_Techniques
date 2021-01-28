@@ -1,7 +1,6 @@
 package io.github.vcvitaly.algo.graphs._01_decomposition1;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.github.vcvitaly.algo.graphs.GraphTransformationHelper;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +18,7 @@ class ConnectedComponentsTest {
 
         assertThat(
                 ConnectedComponents.numberOfComponents(
-                        toAdj(param.countOfVerticesN, param.edges)
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges)
                 )
         ).isEqualTo(param.countOfConnectedComponents);
     }
@@ -45,24 +44,6 @@ class ConnectedComponentsTest {
                         2
                 )
         );
-    }
-
-    static List<Integer>[] toAdj(int n, int[][] edges) {
-        List<Integer>[] adj = (List<Integer>[]) new ArrayList[n];
-        for (int i = 0; i < n; i++) {
-            adj[i] = new ArrayList<>();
-        }
-
-        for (int i = 0; i < edges.length; i++) {
-            int x, y;
-            x = edges[i][0];
-            y = edges[i][1];
-
-            adj[x - 1].add(y - 1);
-            adj[y - 1].add(x - 1);
-        }
-
-        return adj;
     }
 
     @Data

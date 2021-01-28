@@ -1,12 +1,11 @@
 package io.github.vcvitaly.algo.graphs._01_decomposition1;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
 public class ConnectedComponents {
-    static int numberOfComponents(List<Integer>[] adj) {
+    static int numberOfComponents(ArrayList<Integer>[] adj) {
         if (adj.length <= 1) {
             return adj.length;
         }
