@@ -2,16 +2,49 @@ package io.github.vcvitaly.algo.graphs._02_decomposition2;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Acyclicity {
 
+    static final int NO_CYCLES = 0;
+    static final int HAS_CYCLE = 1;
+    private static final int DEFAULT_POST_ORDER = 0;
 
-    static final int NO = 0;
-    static final int YES = 1;
-
+    // [CLRS] 22.4 , [DVP] 3.3.2
     static int acyclic(ArrayList<Integer>[] adj) {
-        //write your code here
-        return NO;
+        if (adj.length <= 1) {
+            return NO_CYCLES;
+        }
+
+        boolean[] visited = new boolean[adj.length];
+        int[] postOrder = new int[adj.length];
+        int clock = 1;
+
+        for (int i = 0; i < adj.length; i++) {
+            if (!visited[i]) {
+                Stack<Integer> stack = new Stack<>();
+                stack.add(i);
+
+                while (!stack.isEmpty()) {
+                    int node = stack.peek();
+                    if (!visited[node]) {
+                        for (int neighbor : adj[node]) {
+                            if (visited[neighbor] && postOrder[neighbor] == DEFAULT_POST_ORDER) {
+                                return HAS_CYCLE;
+                            } else {
+                                stack.push(neighbor);
+                            }
+                        }
+                        visited[node] = true;
+                    } else {
+                        stack.pop();
+                        postOrder[node] = clock++;
+                    }
+                }
+            }
+        }
+
+        return NO_CYCLES;
     }
 
     public static void main(String[] args) {
