@@ -1,81 +1,82 @@
 package io.github.vcvitaly.algo.graphs._02_decomposition2;
 
 import io.github.vcvitaly.algo.graphs.GraphTransformationHelper;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 class ToposortTest {
 
-    @ParameterizedTest
-    @MethodSource("params")
-    void findsTopologicalOrdering(Param param) {
-        System.out.println(param);
+    @Test
+    void findsOneOfThePossibleOrderingsSample1() {
+        int[][] edges = {
+                new int[] {1, 2},
+                new int[] {4, 1},
+                new int[] {3, 1}
+        };
+        int countOfVerticesN = 4;
 
-        assertOrdering(param);
+        List<Integer> ordering = Toposort.toposort(
+                GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
+        );
+
+        System.out.println(ordering);
+
+        String orderdingAsString = getAsString(ordering);
+
+        assertThat(
+                orderdingAsString.contains("412") && orderdingAsString.contains("3") ||
+                        orderdingAsString.contains("312") && orderdingAsString.contains("4")
+        );
     }
 
-    private void assertOrdering(Param param) {
-        assertThat(
-                Toposort.toposort(
-                            GraphTransformationHelper.directedEdgesToAdj(param.countOfVerticesN, param.edges)
-                        )
-        ).containsExactlyElementsOf(param.ordering);
+    @NotNull
+    private String getAsString(List<Integer> list) {
+        return list.stream().map(String::valueOf).collect(Collectors.joining(""));
     }
 
     @Test
-    void findsOneOfThePossibleOrderings() {
+    void findsOneOfThePossibleOrderingsSample2() {
         int[][] edges = {
                 new int[]{3, 1}
         };
         int countOfVerticesN = 4;
 
-        ArrayList<Integer> ordering = Toposort.toposort(
+        List<Integer> ordering = Toposort.toposort(
                 GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
         );
 
+        System.out.println(ordering);
+
         assertThat(ordering)
-                .containsSubsequence(3, 1).contains(2, 4);
+                .containsSequence(3, 1).contains(2, 4);
     }
 
-    static Stream<Param> params() {
-        return Stream.of(
-                Param.of(4,
-                        new int[][] {
-                                new int[] {1, 2},
-                                new int[] {4, 1},
-                                new int[] {3, 1}
-                        },
-                        Arrays.asList(4, 3, 1, 2)
-                ),
-                Param.of(4,
-                        new int[][] {
-                                new int[] {1, 2},
-                                new int[] {2, 3},
-                                new int[] {1, 3},
-                                new int[] {3, 4},
-                                new int[] {1, 4},
-                                new int[] {2, 5},
-                                new int[] {3, 5}
-                        },
-                        Arrays.asList(5, 4, 3, 2, 1)
-                )
+    @Test
+    void findsOneOfThePossibleOrderingsSample3() {
+        int[][] edges = {
+                new int[] {1, 2},
+                new int[] {2, 3},
+                new int[] {1, 3},
+                new int[] {3, 4},
+                new int[] {1, 4},
+                new int[] {2, 5},
+                new int[] {3, 5}
+        };
+        int countOfVerticesN = 5;
+
+        List<Integer> ordering = Toposort.toposort(
+                GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
         );
+
+        System.out.println(ordering);
+
+        assertThat(ordering)
+                .containsExactlyInAnyOrder(1, 2, 3, 4, 5);
     }
 
-    @Data
-    @AllArgsConstructor(staticName = "of")
-    private static class Param {
-        int countOfVerticesN;
-        private int[][] edges;
-        private List<Integer> ordering;
-    }
 }

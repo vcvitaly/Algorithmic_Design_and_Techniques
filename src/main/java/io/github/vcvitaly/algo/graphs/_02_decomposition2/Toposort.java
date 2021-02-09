@@ -1,13 +1,38 @@
 package io.github.vcvitaly.algo.graphs._02_decomposition2;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Toposort {
-    static ArrayList<Integer> toposort(ArrayList<Integer>[] adj) {
-        int used[] = new int[adj.length];
-        ArrayList<Integer> order = new ArrayList<Integer>();
-        //write your code here
+    static List<Integer> toposort(List<Integer>[] adj) {
+        List<Integer> order = new LinkedList<>();
+        boolean[] visited = new boolean[adj.length];
+
+        for (int i = 0; i < adj.length; i++) {
+            if (!visited[i]) {
+                Stack<Integer> stack = new Stack<>();
+                stack.add(i);
+
+                while (!stack.isEmpty()) {
+                    int node = stack.peek();
+                    if (!visited[node]) {
+                        for (int neighbor : adj[node]) {
+                            if (!visited[neighbor]) {
+                                stack.push(neighbor);
+                            }
+                        }
+                        visited[node] = true;
+                    } else {
+                        stack.pop();
+                        order.add(0, node + 1);
+                    }
+                }
+            }
+        }
+
         return order;
     }
 
@@ -19,7 +44,7 @@ public class Toposort {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
         int m = scanner.nextInt();
-        ArrayList<Integer>[] adj = (ArrayList<Integer>[])new ArrayList[n];
+        List<Integer>[] adj = (ArrayList<Integer>[])new ArrayList[n];
         for (int i = 0; i < n; i++) {
             adj[i] = new ArrayList<Integer>();
         }
@@ -29,7 +54,7 @@ public class Toposort {
             y = scanner.nextInt();
             adj[x - 1].add(y - 1);
         }
-        ArrayList<Integer> order = toposort(adj);
+        List<Integer> order = toposort(adj);
         for (int x : order) {
             System.out.print((x + 1) + " ");
         }
