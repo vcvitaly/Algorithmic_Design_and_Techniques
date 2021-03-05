@@ -55,7 +55,7 @@ public class Toposort {
                     stack.pop();
                     for (int neighbor : adj[node]) {
                         countOfParents[neighbor]--;
-                        if (countOfParents[neighbor] == 0) {
+                        if (countOfParents[neighbor] == 0 && !visited[neighbor]) {
                             nodesWithoutIncomingEdges.add(neighbor);
                         }
                     }
