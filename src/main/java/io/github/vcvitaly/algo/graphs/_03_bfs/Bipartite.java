@@ -1,16 +1,47 @@
 package io.github.vcvitaly.algo.graphs._03_bfs;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Bipartite {
 
-    public static final int IS_BIPARTITE = 1;
-    public static final int IS_NOT_BIPARTITE = 0;
+    static final int IS_BIPARTITE = 1;
+    static final int IS_NOT_BIPARTITE = 0;
+
+    private static final int WHITE = -1;
+    private static final int BLACK = -2;
+    private static final int START_INDEX = 0;
 
     static boolean isBipartite(ArrayList<Integer>[] adj) {
-        //write your code here
-        return false;
+        if (adj.length <= 2) {
+            return true;
+        }
+
+        int[] colors = new int[adj.length];
+        boolean[] visited = new boolean[adj.length];
+        colors[START_INDEX] = WHITE;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(START_INDEX);
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            ArrayList<Integer> neighbors = adj[node];
+            for (int neighbor : neighbors) {
+                if (!visited[neighbor]) {
+                    queue.add(neighbor);
+                    colors[neighbor] = colors[node] == WHITE ? BLACK : WHITE;
+                } else {
+                    if (colors[node] == colors[neighbor]) {
+                        return false;
+                    }
+                }
+            }
+            visited[node] = true;
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {
