@@ -19,7 +19,7 @@ class BFSTest {
 
         assertThat(
                 BFS.distance(
-                        GraphTransformationHelper.undirectedEdgesToAdj(param.countOfVerticesN, param.edges), param.u, param.v
+                        GraphTransformationHelper.undirectedEdgesToAdj(param.countOfVerticesN, param.edges), param.u - 1, param.v - 1
                 )
         ).isEqualTo(param.minDistance);
     }

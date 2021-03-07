@@ -1,6 +1,9 @@
 package io.github.vcvitaly.algo.graphs._03_bfs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class BFS {
@@ -8,8 +11,28 @@ public class BFS {
     static final int NONE = -1;
 
     static int distance(ArrayList<Integer>[] adj, int s, int t) {
-        //write your code here
-        return NONE;
+        int[] disntances = new int[adj.length];
+        boolean[] visited = new boolean[adj.length];
+        Arrays.fill(disntances, NONE);
+        disntances[s] = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(s);
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            ArrayList<Integer> neighbors = adj[node];
+            for (int neighbor : neighbors) {
+                if (!visited[neighbor]) {
+                    queue.add(neighbor);
+                }
+                if (disntances[neighbor] == NONE || disntances[node] + 1 < disntances[neighbor]) {
+                    disntances[neighbor] = disntances[node] + 1;
+                }
+            }
+            visited[node] = true;
+        }
+
+        return disntances[t];
     }
 
     public static void main(String[] args) {
