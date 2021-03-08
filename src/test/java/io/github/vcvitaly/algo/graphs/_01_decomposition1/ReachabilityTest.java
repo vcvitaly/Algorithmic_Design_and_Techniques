@@ -18,7 +18,7 @@ class ReachabilityTest {
 
         assertThat(
                 Reachability.reach(
-                        GraphTransformationHelper.undirectedEdgesToAdj(param.countOfVerticesN, param.edges), --param.x, --param.y
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges, false), --param.x, --param.y
                 )
         ).isEqualTo(param.hasPathFromXtoY);
     }

@@ -19,7 +19,7 @@ class BipartiteTest {
 
         assertThat(
                 Bipartite.isBipartite(
-                        GraphTransformationHelper.undirectedEdgesToAdj(param.countOfVerticesN, param.edges)
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges, false)
                 )
         ).isEqualTo(param.isBipartite);
     }

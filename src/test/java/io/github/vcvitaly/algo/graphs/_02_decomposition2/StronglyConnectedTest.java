@@ -18,7 +18,7 @@ class StronglyConnectedTest {
 
         assertThat(
                 StronglyConnected.numberOfStronglyConnectedComponents(
-                        GraphTransformationHelper.directedEdgesToAdj(param.countOfVerticesN, param.edges)
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges, true)
                 )
         ).isEqualTo(param.numberOfStronglyConnectedComponents);
     }

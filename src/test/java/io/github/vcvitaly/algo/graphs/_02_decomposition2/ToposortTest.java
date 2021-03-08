@@ -21,7 +21,7 @@ class ToposortTest {
         int countOfVerticesN = 4;
 
         List<Integer> ordering = Toposort.toposort(
-                GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
+                GraphTransformationHelper.edgesToAdj(countOfVerticesN, edges, true)
         );
 
         System.out.println(ordering);
@@ -47,7 +47,7 @@ class ToposortTest {
         int countOfVerticesN = 4;
 
         List<Integer> ordering = Toposort.toposort(
-                GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
+                GraphTransformationHelper.edgesToAdj(countOfVerticesN, edges, true)
         );
 
         System.out.println(ordering);
@@ -70,7 +70,7 @@ class ToposortTest {
         int countOfVerticesN = 5;
 
         List<Integer> ordering = Toposort.toposort(
-                GraphTransformationHelper.directedEdgesToAdj(countOfVerticesN, edges)
+                GraphTransformationHelper.edgesToAdj(countOfVerticesN, edges, true)
         );
 
         System.out.println(ordering);

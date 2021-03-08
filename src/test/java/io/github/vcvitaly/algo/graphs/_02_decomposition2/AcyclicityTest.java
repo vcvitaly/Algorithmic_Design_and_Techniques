@@ -86,7 +86,7 @@ class AcyclicityTest {
     private static void assertAcyclicity(Param param) {
         assertThat(
                 Acyclicity.acyclic(
-                        GraphTransformationHelper.directedEdgesToAdj(param.countOfVerticesN, param.edges)
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges, true)
                 )
         ).isEqualTo(param.isAcyclic);
     }

@@ -18,7 +18,7 @@ class ConnectedComponentsTest {
 
         assertThat(
                 ConnectedComponents.numberOfComponents(
-                        GraphTransformationHelper.undirectedEdgesToAdj(param.countOfVerticesN, param.edges)
+                        GraphTransformationHelper.edgesToAdj(param.countOfVerticesN, param.edges, false)
                 )
         ).isEqualTo(param.countOfConnectedComponents);
     }
