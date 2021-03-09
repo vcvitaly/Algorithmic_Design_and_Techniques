@@ -15,10 +15,6 @@ public class Bipartite {
     private static final int START_INDEX = 0;
 
     static boolean isBipartite(ArrayList<Integer>[] adj) {
-        if (adj.length <= 2) {
-            return true;
-        }
-
         int[] colors = new int[adj.length];
         boolean[] visited = new boolean[adj.length];
         colors[START_INDEX] = WHITE;
@@ -30,8 +26,12 @@ public class Bipartite {
             ArrayList<Integer> neighbors = adj[node];
             for (int neighbor : neighbors) {
                 if (!visited[neighbor]) {
-                    queue.add(neighbor);
-                    colors[neighbor] = colors[node] == WHITE ? BLACK : WHITE;
+                    if (node != neighbor) {
+                        queue.add(neighbor);
+                        colors[neighbor] = colors[node] == WHITE ? BLACK : WHITE;
+                    } else {
+                        return false;
+                    }
                 } else {
                     if (colors[node] == colors[neighbor]) {
                         return false;
@@ -39,6 +39,14 @@ public class Bipartite {
                 }
             }
             visited[node] = true;
+        }
+
+        for (int u = 0; u < adj.length; u++) {
+            for (int v = 0; v < adj[u].size(); v++) {
+                if (colors[u] == colors[adj[u].get(v)]) {
+                    return false;
+                }
+            }
         }
 
         return true;
