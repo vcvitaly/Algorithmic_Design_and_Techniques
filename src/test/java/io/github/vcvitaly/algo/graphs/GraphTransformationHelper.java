@@ -39,9 +39,9 @@ public class GraphTransformationHelper {
                 y = edge[1],
                 w = edge[2];
 
-            adj[x - 1].add(new Edge(y, w));
+            adj[x - 1].add(new Edge(y - 1, w));
             if (!isDirectedGraph) {
-                adj[y - 1].add(new Edge(x, w));
+                adj[y - 1].add(new Edge(x - 1, w));
             }
         }
 
