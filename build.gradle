@@ -10,13 +10,12 @@ repositories {
 }
 
 dependencies {
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-
     testCompile 'org.rnorth.duct-tape:duct-tape:1.0.8'
 
     testCompile "com.google.guava:guava:29.0-jre"
 //    testImplementation 'org.hamcrest:hamcrest:2.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.18'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     testCompile 'org.junit.jupiter:junit-jupiter:5.7.0'
     testCompile 'org.assertj:assertj-core:3.19.0'
 }
