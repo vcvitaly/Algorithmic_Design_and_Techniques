@@ -17,7 +17,7 @@ class SuffixTreeTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void findsPatterns(Param param) {
+    void constructsSuffixTree(Param param) {
         System.out.println(Helper.shortToString(param));
 
         // Act & Assert
@@ -35,6 +35,10 @@ class SuffixTreeTest {
                 Param.of(
                         "ACA$",
                         Arrays.asList("$", "$", "A", "CA$", "CA$")
+                ),
+                Param.of(
+                        "ATAAATG$",
+                        Arrays.asList("AAATG$", "G$", "T", "ATG$", "TG$", "A", "A", "AAATG$", "G$", "T", "G$", "$")
                 )
         );
     }

@@ -4,13 +4,14 @@ import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class SuffixTree {
     static final String TERMINAL_SIGN = "$";
@@ -34,19 +35,36 @@ public class SuffixTree {
         }
     }
 
+    public List<String> edges(TrieNode<String> trie) {
+        Queue<TrieNode<String>> queue = new LinkedList<>();
+        List<String> allEdgeLabels = new LinkedList<>();
+
+        queue.add(trie);
+
+        while (!queue.isEmpty()) {
+            TrieNode<String> node = queue.poll();
+            Set<String> edgeLabels = node.edges.keySet();
+            allEdgeLabels.addAll(edgeLabels);
+
+            Collection<TrieNode<String>> childNodes = node.edges.values();
+            queue.addAll(childNodes);
+        }
+        return allEdgeLabels;
+    }
+
     // Build a suffix tree of the string text and return a list
     // with all of the labels of its edges (the corresponding
     // substrings of the text) in any order.
     public List<String> computeSuffixTreeEdges(String text) {
-        List<String> result = new ArrayList<>();
-
         SuffixTrie trie = new SuffixTrie();
         for (int i = 0; i < text.length(); i++) {
-            trie.add(text.substring(i));
+            String substring = text.substring(i);
+            trie.add(substring);
         }
 
-        // Implement this function yourself
-        return result;
+        trie.compress();
+
+        return edges(trie.root);
     }
 
     public void print(List<String> x) {
@@ -67,7 +85,7 @@ public class SuffixTree {
     }
 
     static class SuffixTrie {
-        private final AtomicInteger counter = new AtomicInteger(1);
+        private int counter = 1;
         TrieNode<String> root;
 
         public SuffixTrie() {
@@ -82,7 +100,7 @@ public class SuffixTree {
                 if (currentNode.edges.containsKey(currentSymbol)) {
                     currentNode = currentNode.edges.get(currentSymbol);
                 } else {
-                    TrieNode<String> newNode = new TrieNode<>(counter.getAndIncrement());
+                    TrieNode<String> newNode = new TrieNode<>(counter++);
                     currentNode.edges.put(currentSymbol, newNode);
                     currentNode = newNode;
                 }
@@ -90,28 +108,29 @@ public class SuffixTree {
         }
 
         void compress() {
-            Queue<TrieNode<String>> queue = new LinkedList<>();
-            queue.add(root);
+            Stack<TrieNode<String>> stack = new Stack<>();
+            stack.push(root);
 
             StringBuilder buf = new StringBuilder();
-            TrieNode<String> u = root, v = null;
+            TrieNode<String> u = root, tmp, v = null;
 
-            while (!queue.isEmpty()) {
-                v = queue.poll();
-                if (v.edges.size() != 1) { // if is a leaf or has many children - a compressed label has to be applied
+            while (!stack.isEmpty()) {
+                v = stack.pop();
+                if (v.edges.size() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
                     if (buf.length() > 0) {
                         u.edges.clear();
                         u.edges.put(buf.toString(), v);
                         buf = new StringBuilder();
                     }
-                    if (v.edges.size() > 1) {
-                        queue.addAll(v.edges.values());
-                        u = queue.peek();
+                    if (v.hasChildren()) {
+                        stack.addAll(v.edges.values());
+                        u = v;
                     }
                 } else {
+//                    if (u.edges.containsKey(v.))
                     Map.Entry<String, TrieNode<String>> next = v.edges.entrySet().iterator().next();
                     buf.append(next.getKey());
-                    queue.add(next.getValue());
+                    stack.push(next.getValue());
                 }
             }
         }
