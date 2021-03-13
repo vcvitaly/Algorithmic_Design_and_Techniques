@@ -27,6 +27,16 @@ class BipartiteTest {
     static Stream<Param> params() {
         return Stream.of(
                 Param.of(
+                        0,
+                        new int[][] {},
+                        false
+                ),
+                Param.of(
+                        1,
+                        new int[][] {},
+                        false
+                ),
+                Param.of(
                         4,
                         new int[][] {
                                 new int[] {1, 2},
@@ -43,6 +53,29 @@ class BipartiteTest {
                                 new int[] {4, 2},
                                 new int[] {3, 4},
                                 new int[] {1, 4}
+                        },
+                        true
+                ),
+                Param.of(
+                        3,
+                        new int[][] {
+                                new int[] {1, 2},
+                        },
+                        false
+                ),
+                Param.of(
+                        4,
+                        new int[][] {
+                                new int[] {1, 2},
+                                new int[] {3, 3},
+                        },
+                        false
+                ),
+                Param.of(
+                        4,
+                        new int[][] {
+                                new int[] {1, 2},
+                                new int[] {3, 4},
                         },
                         true
                 )
