@@ -1,7 +1,6 @@
 package io.github.vcvitaly.algo.strings._01_suffix;
 
 import io.github.vcvitaly.algo.Helper;
-import io.github.vcvitaly.algo.strings._01_suffix.common.Edge;
 import io.github.vcvitaly.algo.strings._01_suffix.common.PatternTrieCommon;
 import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.util.Arrays;
@@ -12,6 +11,7 @@ import lombok.Data;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import static io.github.vcvitaly.algo.strings._01_suffix.TrieConstruction.Edge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TrieConstructionTest {

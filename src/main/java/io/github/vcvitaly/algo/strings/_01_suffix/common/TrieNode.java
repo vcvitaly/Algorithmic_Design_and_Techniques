@@ -22,6 +22,10 @@ public class TrieNode<T> {
         return edges.containsKey(label);
     }
 
+    public boolean hasChildren() {
+        return !edges.isEmpty();
+    }
+
     public boolean isALeaf() {
         return value != ROOT_VALUE && edges.isEmpty();
     }
