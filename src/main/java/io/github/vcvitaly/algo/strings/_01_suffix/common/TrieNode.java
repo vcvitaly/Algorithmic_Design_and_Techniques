@@ -34,6 +34,18 @@ public class TrieNode<T> {
         return edges.get(label);
     }
 
+    public void removeEdge(T label) {
+        edges.remove(label);
+    }
+
+    public void addEdge(T label, TrieNode<T> node) {
+        edges.put(label, node);
+    }
+
+    public int edgeCount() {
+        return edges.size();
+    }
+
     @Override
     public String toString() {
         return "TrieNode{" +

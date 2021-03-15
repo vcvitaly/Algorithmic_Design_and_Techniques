@@ -112,19 +112,20 @@ public class SuffixTree {
             stack.push(root);
 
             StringBuilder buf = new StringBuilder();
-            TrieNode<String> u = root, tmp, v = null;
+            TrieNode<String> u = root;
 
             while (!stack.isEmpty()) {
-                v = stack.pop();
-                if (v.edges.size() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
+                TrieNode<String> v = stack.pop();
+                if (v.edgeCount() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
                     if (buf.length() > 0) {
-                        u.edges.clear();
-                        u.edges.put(buf.toString(), v);
+                        String keyPrefixForRemoval = String.valueOf(buf.toString().charAt(0));
+                        u.removeEdge(keyPrefixForRemoval);
+                        u.addEdge(buf.toString(), v);
                         buf = new StringBuilder();
                     }
                     if (v.hasChildren()) {
                         stack.addAll(v.edges.values());
-                        u = v;
+                        u = v; // make v the current node
                     }
                 } else {
 //                    if (u.edges.containsKey(v.))
@@ -133,6 +134,10 @@ public class SuffixTree {
                     stack.push(next.getValue());
                 }
             }
+        }
+
+        private String getKeyPrefixForRemoval(StringBuilder buf) {
+            return String.valueOf(buf.toString().charAt(0));
         }
     }
 }
