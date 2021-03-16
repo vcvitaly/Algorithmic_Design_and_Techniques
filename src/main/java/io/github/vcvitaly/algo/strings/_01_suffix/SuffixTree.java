@@ -89,7 +89,7 @@ public class SuffixTree {
         TrieNode<String> root;
 
         public SuffixTrie() {
-            root = new TrieNode<>();
+            root = TrieNode.root();
         }
 
         void add(String s) {
@@ -100,7 +100,7 @@ public class SuffixTree {
                 if (currentNode.edges.containsKey(currentSymbol)) {
                     currentNode = currentNode.edges.get(currentSymbol);
                 } else {
-                    TrieNode<String> newNode = new TrieNode<>(counter++);
+                    TrieNode<String> newNode = new TrieNode<>(currentSymbol, counter++);
                     currentNode.edges.put(currentSymbol, newNode);
                     currentNode = newNode;
                 }
@@ -118,6 +118,7 @@ public class SuffixTree {
                 TrieNode<String> v = stack.pop();
                 if (v.edgeCount() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
                     if (buf.length() > 0) {
+                        buf.append(v.label);
                         String keyPrefixForRemoval = String.valueOf(buf.toString().charAt(0));
                         u.removeEdge(keyPrefixForRemoval);
                         u.addEdge(buf.toString(), v);
@@ -128,16 +129,11 @@ public class SuffixTree {
                         u = v; // make v the current node
                     }
                 } else {
-//                    if (u.edges.containsKey(v.))
                     Map.Entry<String, TrieNode<String>> next = v.edges.entrySet().iterator().next();
-                    buf.append(next.getKey());
+                    buf.append(v.label);
                     stack.push(next.getValue());
                 }
             }
-        }
-
-        private String getKeyPrefixForRemoval(StringBuilder buf) {
-            return String.valueOf(buf.toString().charAt(0));
         }
     }
 }

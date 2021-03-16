@@ -31,7 +31,7 @@ class SuffixTreeTest {
                 Param.of(
                         "A$",
                         Arrays.asList("$", "A$")
-                )/*,
+                ),
                 Param.of(
                         "ACA$",
                         Arrays.asList("$", "$", "A", "CA$", "CA$")
@@ -39,7 +39,7 @@ class SuffixTreeTest {
                 Param.of(
                         "ATAAATG$",
                         Arrays.asList("AAATG$", "G$", "T", "ATG$", "TG$", "A", "A", "AAATG$", "G$", "T", "G$", "$")
-                )*/
+                )
         );
     }
 
