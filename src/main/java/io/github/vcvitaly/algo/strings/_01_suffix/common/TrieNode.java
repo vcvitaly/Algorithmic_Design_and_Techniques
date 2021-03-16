@@ -7,15 +7,17 @@ public class TrieNode<T> {
     public static final int ROOT_VALUE = 0;
 
     public int value;
+    public T label;
     public Map<T, TrieNode<T>> edges;
 
-    public TrieNode() {
-        this(ROOT_VALUE);
-    }
-
-    public TrieNode(int value) {
+    public TrieNode(T label, int value) {
+        this.label = label;
         this.value = value;
         edges = new LinkedHashMap<>();
+    }
+
+    public static <T> TrieNode<T> root() {
+        return new TrieNode<>(null, ROOT_VALUE);
     }
 
     public boolean hasEdge(T label) {
