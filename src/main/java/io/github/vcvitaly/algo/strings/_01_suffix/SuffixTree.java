@@ -129,8 +129,8 @@ public class SuffixTree {
                         u = v; // make v the current node
                     }
                 } else {
-                    Map.Entry<String, TrieNode<String>> next = v.edges.entrySet().iterator().next();
                     buf.append(v.label);
+                    Map.Entry<String, TrieNode<String>> next = v.edges.entrySet().iterator().next();
                     stack.push(next.getValue());
                 }
             }
