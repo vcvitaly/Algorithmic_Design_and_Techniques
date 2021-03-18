@@ -1,17 +1,16 @@
 package io.github.vcvitaly.algo.strings._01_suffix;
 
-import io.github.vcvitaly.algo.strings._01_suffix.common.TrieNode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 public class SuffixTree {
     static final String TERMINAL_SIGN = "$";
@@ -43,10 +42,10 @@ public class SuffixTree {
 
         while (!queue.isEmpty()) {
             TrieNode<String> node = queue.poll();
-            Set<String> edgeLabels = node.edges.keySet();
+            Set<String> edgeLabels = node.neighbors.stream().map(e -> e.label).collect(Collectors.toSet());
             allEdgeLabels.addAll(edgeLabels);
 
-            Collection<TrieNode<String>> childNodes = node.edges.values();
+            Collection<TrieNode<String>> childNodes = node.neighbors;
             queue.addAll(childNodes);
         }
         return allEdgeLabels;
@@ -97,11 +96,11 @@ public class SuffixTree {
 
             for (char c : s.toCharArray()) {
                 String currentSymbol = String.valueOf(c);
-                if (currentNode.edges.containsKey(currentSymbol)) {
-                    currentNode = currentNode.edges.get(currentSymbol);
+                if (currentNode.hasChildNode(currentSymbol)) {
+                    currentNode = currentNode.getChildNode(currentSymbol);
                 } else {
                     TrieNode<String> newNode = new TrieNode<>(currentSymbol, counter++);
-                    currentNode.edges.put(currentSymbol, newNode);
+                    currentNode.addChildNode(newNode);
                     currentNode = newNode;
                 }
             }
@@ -116,24 +115,75 @@ public class SuffixTree {
 
             while (!stack.isEmpty()) {
                 TrieNode<String> v = stack.pop();
-                if (v.edgeCount() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
+                if (v.childCount() != 1) { // if is a leaf or has many children - a compressed label (from the buf) has to be applied
                     if (buf.length() > 0) {
                         buf.append(v.label);
+                        v.label = buf.toString();
                         String keyPrefixForRemoval = String.valueOf(buf.toString().charAt(0));
-                        u.removeEdge(keyPrefixForRemoval);
-                        u.addEdge(buf.toString(), v);
+                        u.removeChildNode(keyPrefixForRemoval);
+                        u.addChildNode(v);
                         buf = new StringBuilder();
                     }
                     if (v.hasChildren()) {
-                        stack.addAll(v.edges.values());
+                        stack.addAll(v.neighbors);
                         u = v; // make v the current node
                     }
                 } else {
                     buf.append(v.label);
-                    Map.Entry<String, TrieNode<String>> next = v.edges.entrySet().iterator().next();
-                    stack.push(next.getValue());
+                    TrieNode<String> next = v.neighbors.get(0);
+                    stack.push(next);
                 }
             }
+        }
+    }
+    
+    static class TrieNode<T> {
+        public static final int ROOT_VALUE = 0;
+
+        public int value;
+        public T label;
+        public List<TrieNode<T>> neighbors;
+
+        public TrieNode(T label, int value) {
+            this.label = label;
+            this.value = value;
+            neighbors = new LinkedList<>();
+        }
+
+        public static <T> TrieNode<T> root() {
+            return new TrieNode<>(null, ROOT_VALUE);
+        }
+
+        public boolean hasChildNode(T label) {
+            return neighbors.stream().anyMatch(node -> node.label.equals(label));
+        }
+
+        public boolean hasChildren() {
+            return !neighbors.isEmpty();
+        }
+
+        public void removeChildNode(T label) {
+            neighbors.removeIf(node -> node.label.equals(label));
+        }
+
+        public TrieNode<T> getChildNode(T label) {
+            return neighbors.stream().filter(node -> node.label.equals(label)).findFirst().get();
+        }
+
+        public void addChildNode(TrieNode<T> node) {
+            neighbors.add(node);
+        }
+
+        public int childCount() {
+            return neighbors.size();
+        }
+
+        @Override
+        public String toString() {
+            return "TrieNode{" +
+                    "label=" + label +
+                    ", edges=" + neighbors +
+                    '}';
         }
     }
 }
