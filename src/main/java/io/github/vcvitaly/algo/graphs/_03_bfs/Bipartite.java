@@ -33,6 +33,7 @@ public class Bipartite {
             while (!queue.isEmpty()) {
                 int node = queue.poll();
                 ArrayList<Integer> neighbors = adj[node];
+                // if a single disconnected node
                 if (neighbors.isEmpty() && colors[node] == NO_COLOR) {
                     return false;
                 }
@@ -45,6 +46,7 @@ public class Bipartite {
                             return false;
                         }
                     } else {
+                        // if an odd cycle ???
                         if (colors[node] == colors[neighbor]) {
                             return false;
                         }

@@ -21,6 +21,7 @@ public class Inversions {
         return merge(t1, t2);
     }
 
+    // Also an algorithm to merge 2 arrays/lists
     private static Tuple<int[], Long> merge(Tuple<int[], Long> t1, Tuple<int[], Long> t2) {
         long nOfInversions = t1.right + t2.right;
         int[] a = t1.left;
