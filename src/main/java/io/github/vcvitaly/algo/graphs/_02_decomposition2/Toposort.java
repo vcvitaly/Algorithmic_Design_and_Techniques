@@ -1,11 +1,10 @@
 package io.github.vcvitaly.algo.graphs._02_decomposition2;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.Stack;
 
 public class Toposort {
@@ -22,7 +21,7 @@ public class Toposort {
             }
         }
 
-        Set<Integer> nodesWithoutIncomingEdges = new LinkedHashSet<>();
+        Queue<Integer> nodesWithoutIncomingEdges = new LinkedList<>();
         for (int i = 0; i < countOfParents.length; i++) {
             if (countOfParents[i] == 0) {
                 nodesWithoutIncomingEdges.add(i);
@@ -30,17 +29,8 @@ public class Toposort {
         }
 
         Stack<Integer> stack = new Stack<>();
-        for (int i = 0; i < adj.length; i++) {
-            if (!visited[i] && countOfParents[i] == 0) {
-                stack.add(i);
-                nodesWithoutIncomingEdges.remove(i);
-            } else {
-                if (!nodesWithoutIncomingEdges.isEmpty()) {
-                    int nextNodeWithoutIncomingEdges = nodesWithoutIncomingEdges.iterator().next();
-                    nodesWithoutIncomingEdges.remove(nextNodeWithoutIncomingEdges);
-                    stack.add(nextNodeWithoutIncomingEdges);
-                }
-            }
+        while (!nodesWithoutIncomingEdges.isEmpty()) {
+            stack.push(nodesWithoutIncomingEdges.poll());
 
             while (!stack.isEmpty()) {
                 int node = stack.peek();
@@ -55,7 +45,7 @@ public class Toposort {
                     stack.pop();
                     for (int neighbor : adj[node]) {
                         countOfParents[neighbor]--;
-                        if (countOfParents[neighbor] == 0) {
+                        if (countOfParents[neighbor] == 0 && !visited[neighbor]) {
                             nodesWithoutIncomingEdges.add(neighbor);
                         }
                     }
@@ -87,7 +77,7 @@ public class Toposort {
         }
         List<Integer> order = toposort(adj);
         for (int x : order) {
-            System.out.print((x + 1) + " ");
+            System.out.print((x) + " ");
         }
     }
 }

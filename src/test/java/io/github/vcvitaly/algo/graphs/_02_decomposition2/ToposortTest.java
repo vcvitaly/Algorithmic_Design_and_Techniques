@@ -59,13 +59,13 @@ class ToposortTest {
     @Test
     void findsOneOfThePossibleOrderingsSample3() {
         int[][] edges = {
-                new int[] {1, 2},
-                new int[] {2, 3},
-                new int[] {1, 3},
-                new int[] {3, 4},
-                new int[] {1, 4},
-                new int[] {2, 5},
-                new int[] {3, 5}
+                new int[] {2, 1},
+                new int[] {3, 2},
+                new int[] {3, 1},
+                new int[] {4, 3},
+                new int[] {4, 1},
+                new int[] {5, 2},
+                new int[] {5, 3}
         };
         int countOfVerticesN = 5;
 
@@ -77,6 +77,32 @@ class ToposortTest {
 
         assertThat(ordering)
                 .containsExactlyInAnyOrder(1, 2, 3, 4, 5);
+    }
+
+    @Test
+    void findsOneOfThePossibleOrderingsSample4() {
+        int[][] edges = {
+                new int[] {4, 5},
+                new int[] {3, 1},
+                new int[] {2, 1},
+                new int[] {2, 3},
+                new int[] {3, 4},
+                new int[] {5, 1},
+                new int[] {2, 5},
+                new int[] {4, 1},
+                new int[] {2, 4},
+                new int[] {3, 5},
+        };
+        int countOfVerticesN = 5;
+
+        List<Integer> ordering = Toposort.toposort(
+                GraphTransformationHelper.edgesToAdj(countOfVerticesN, edges, true)
+        );
+
+        System.out.println(ordering);
+
+        assertThat(ordering)
+                .containsExactlyInAnyOrder(2, 3, 4, 5, 1);
     }
 
 }
