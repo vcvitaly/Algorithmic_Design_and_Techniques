@@ -11,6 +11,7 @@ public class Toposort {
     static List<Integer> toposort(List<Integer>[] adj) {
         List<Integer> order = new LinkedList<>();
         boolean[] visited = new boolean[adj.length];
+        boolean[] processed = new boolean[adj.length];
 
         int[] countOfParents = new int[adj.length];
         for (int i = 0; i < adj.length; i++) {
@@ -43,13 +44,16 @@ public class Toposort {
                     visited[node] = true;
                 } else {
                     stack.pop();
-                    for (int neighbor : adj[node]) {
-                        countOfParents[neighbor]--;
-                        if (countOfParents[neighbor] == 0 && !visited[neighbor]) {
-                            nodesWithoutIncomingEdges.add(neighbor);
+                    if (!processed[node]) {
+                        for (int neighbor : adj[node]) {
+                            countOfParents[neighbor]--;
+                            if (countOfParents[neighbor] == 0 && !visited[neighbor]) {
+                                nodesWithoutIncomingEdges.add(neighbor);
+                            }
                         }
+                        order.add(0, node + 1);
+                        processed[node] = true;
                     }
-                    order.add(0, node + 1);
                 }
             }
         }
