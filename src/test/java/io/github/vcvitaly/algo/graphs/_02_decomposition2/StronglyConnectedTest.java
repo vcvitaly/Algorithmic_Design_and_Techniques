@@ -13,7 +13,7 @@ class StronglyConnectedTest {
 
     @ParameterizedTest
     @MethodSource("params")
-    void checksGraphForCycles(Param param) {
+    void calculatesSccCount(Param param) {
         System.out.println(param);
 
         assertThat(
