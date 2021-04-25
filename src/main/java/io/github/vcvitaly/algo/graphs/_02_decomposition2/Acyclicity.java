@@ -17,6 +17,7 @@ public class Acyclicity {
         }
 
         boolean[] visited = new boolean[adj.length];
+        // TODO Can apparently be replaced with a boolean array
         int[] postOrder = new int[adj.length];
         int clock = 1;
 
