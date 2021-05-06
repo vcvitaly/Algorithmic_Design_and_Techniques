@@ -1,13 +1,10 @@
 package io.github.vcvitaly.algo.graphs._05_mst;
 
+import io.github.vcvitaly.algo.graphs._05_mst.common.DisjointSet;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class ConnectingPoints {
     static double minimumDistance(int[] x, int[] y) {
@@ -17,7 +14,7 @@ public class ConnectingPoints {
             disjointSet.makeSet(i);
         }
 
-        Set<Edge> mst = new HashSet<>();
+        List<Edge> mst = new ArrayList<>();
         allEdges.sort(Comparator.comparingDouble(e -> e.weight));
 
         for (Edge edge : allEdges) {
@@ -68,42 +65,6 @@ public class ConnectingPoints {
         @Override
         public String toString() {
             return String.format("Edge{%d->%d, (%f)}", u, v, weight);
-        }
-    }
-
-    private static class DisjointSet {
-        private Map<Integer, Integer> parent = new HashMap<>();
-        private Map<Integer, Integer> rank = new HashMap<>();
-
-        private void makeSet(int i) {
-            parent.put(i, i);
-            rank.put(i, 0);
-        }
-
-        private int find(int i) {
-             if (i != parent.get(i)) {
-                 parent.put(
-                         i, find(parent.get(i))
-                 );
-             }
-            return parent.get(i);
-        }
-
-        private void union(int i, int j) {
-            int iId = find(i);
-            int jId = find(j);
-            if (iId == jId) {
-                return;
-            }
-
-            if (rank.get(i) > rank.get(j)) {
-                parent.put(j, iId);
-            } else {
-                parent.put(i, jId);
-                if (rank.get(i).equals(rank.get(j))) {
-                    rank.put(j, rank.get(j) + 1);
-                }
-            }
         }
     }
 }

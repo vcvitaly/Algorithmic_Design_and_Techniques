@@ -1,12 +1,11 @@
 package io.github.vcvitaly.algo.graphs._05_mst;
 
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
 
 class ConnectingPointsTest {
 
@@ -16,10 +15,12 @@ class ConnectingPointsTest {
         System.out.println(param);
 
         Assertions.assertThat(
-                ConnectingPoints.minimumDistance(
-                        param.x, param.y
+                Math.abs(
+                        ConnectingPoints.minimumDistance(
+                                param.x, param.y
+                        ) - param.minDistance
                 )
-        ).isEqualTo(param.minDistance);
+        ).isLessThan(0.000001d);
     }
 
     static Stream<Param> params() {
