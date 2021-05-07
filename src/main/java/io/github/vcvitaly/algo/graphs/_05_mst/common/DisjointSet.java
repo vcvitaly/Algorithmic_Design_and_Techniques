@@ -29,11 +29,11 @@ public class DisjointSet {
         }
 
         if (ranks.get(iId) > ranks.get(jId)) {
-            parents.put(j, iId);
+            parents.put(jId, iId);
         } else {
-            parents.put(i, jId);
+            parents.put(iId, jId);
             if (ranks.get(iId).equals(ranks.get(jId))) {
-                ranks.put(j, ranks.get(j) + 1);
+                ranks.put(jId, ranks.get(jId) + 1);
             }
         }
     }
