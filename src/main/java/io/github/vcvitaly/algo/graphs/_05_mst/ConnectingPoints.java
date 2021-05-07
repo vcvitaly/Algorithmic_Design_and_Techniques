@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConnectingPoints {
+
     static double minimumDistance(int[] x, int[] y) {
         List<Edge> allEdges = pointsToEdges(x, y);
         DisjointSet disjointSet = new DisjointSet();
